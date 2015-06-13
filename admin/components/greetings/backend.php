@@ -51,7 +51,11 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
         $cfg['guest_publish']    = cmsCore::request('guest_publish', 'int');
         $cfg['moderation']       = cmsCore::request('moderation', 'int');
         $cfg['img_collection']   = cmsCore::request('img_collection', 'int');
-        $cfg['img_width']        = cmsCore::request('img_width', 'int');
+        
+        $cfg['thumb1']           = cmsCore::request('thumb1', 'int');
+        $cfg['thumb2']           = cmsCore::request('thumb2', 'int');
+        $cfg['thumbsqr']         = cmsCore::request('thumbsqr', 'int');
+        
         $cfg['show_userlink']    = cmsCore::request('show_userlink', 'int');
         $cfg['user_image']       = cmsCore::request('user_image', 'int');
         $cfg['guest_image']      = cmsCore::request('guest_image', 'int');
@@ -84,13 +88,13 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
         <div id="basic">
             <table width="661" border="0" cellpadding="10" cellspacing="0" class="proptable">
                    <tr>
-                        <td width="">
+                        <td >
                             <strong>Количество поздравлений: </strong><br/>
                             <span class="hinttext">
                                 Количество поздравлений на странице
                             </span>
                         </td>
-                        <td valign="top">
+                        <td valign="top" width="100">
                             <input name="perpage" type="text" id="perpage" value="<?php echo @$cfg['perpage'];?>" style="width:50px"/> 
                         </td>
                     </tr>
@@ -148,8 +152,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                         <td>
                             <strong>Предлагать пользователям выбирать изображение из коллекции сайта:</strong><br />
                             <span class="hinttext">
-                                Файлы коллекции сохранить в папку  /upload/greetings/collection/ на сервере.<br />
-                                default.jpg - изображение по умолчанию<br />Разрешенные типы файлов: jpg, jpeg, png, gif, bmp
+                                Файлы коллекции сохранить в папки:  /upload/greetings/small/ и /upload/greetings/medium/ на сервере. Название файлов коллекции должно начинаться с greeting<br />
+                                default.jpg - изображение по умолчанию<br />Разрешенные типы файлов: jpg, png, gif
                             </span>
                         </td>
                         <td valign="top">
@@ -158,16 +162,24 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                         </td>
                     </tr>
                     <tr>
-                        <td width="">
-                            <strong>Ширина изображения в поздравлении: </strong><br/>
-                            <span class="hinttext">В пикселях</span>
+                        <td><strong>Ширина маленькой копии фото поздравления: </strong></td>
+                        <td><input type="text" value="150" size="5" name="thumb1" value="<?php echo @$cfg['thumb1'];?>" /> px</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Ширина средней копии фото поздравления: </strong></td>
+                        <td><input type="text" value="400" size="5" name="thumb2" value="<?php echo @$cfg['thumb2'];?>" /> px</td>
+		    </tr>
+                    <tr>
+                        <td>
+                            <strong>Квадратные изображения:</strong>
                         </td>
-                        <td valign="top">
-                            <input name="img_width" type="text" id="img_width" value="<?php if (@$cfg['img_width']>0) echo @$cfg['img_width'];?>" style="width:50px"/> px
+                        <td>
+                            <label><input type="radio" value="1" name="thumbsqr" <?php if (@$cfg['thumbsqr']) { echo 'checked="checked"'; } ?>>Да</label>
+                            <label><input type="radio" value="0" name="thumbsqr" <?php if (@!$cfg['thumbsqr']) { echo 'checked="checked"'; } ?>>Нет</label>
                         </td>
                     </tr>
                     <tr>
-                        <td width="">
+                        <td>
                             <strong>Разрешить загружать свои изображения: </strong><br/>
                             <span class="hinttext">Пользователи cмогут загружать свои изображения к поздравлениям</span>
                         </td>
@@ -177,22 +189,13 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                         </td>
                     </tr>
                     <tr>
-                        <td width="">
+                        <td>
                             <strong>Разрешить гостям загружать изображения: </strong><br/>
                             <span class="hinttext">Если этот и предыдущий пункт включены гости смогут загружать фото</span>
                         </td>
                         <td valign="top">
                             <label><input name="guest_image" type="radio" value="1"  <?php if (@$cfg['guest_image']) { echo 'checked="checked"'; } ?> /> Да</label>
                             <label><input name="guest_image" type="radio" value="0"  <?php if (@!$cfg['guest_image']) { echo 'checked="checked"'; } ?> /> Нет</label>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>Квадратные изображения:</strong></td>
-                        <td valign="top">
-                            <select name="thumbsqr" id="select" style="width:60px">
-                                <label><option value="1" <?php if (@$cfg['thumbsqr']=='1') { echo 'selected="selected"'; } ?>>Да</option></label>
-                                <label><option value="0" <?php if (@$cfg['thumbsqr']=='0') { echo 'selected="selected"'; } ?>>Нет</option></label>
-                            </select>
                         </td>
                     </tr>
             </table>
@@ -247,7 +250,6 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
     if ($opt == 'submit_item'){
         
         if(!cmsCore::validateForm()) { cmsCore::error404(); }
-        $inCore->includeGraphics();
 
         $item = array();
         $item['title']         = cmsCore::request('title', 'str');
@@ -259,22 +261,11 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
         if (isset($_FILES["imgfile"]["name"]) && @$_FILES["imgfile"]["name"]!=''){
 
-            $tmp_name = $_FILES["imgfile"]["tmp_name"];
-            $file = $_FILES["imgfile"]["name"];
-            $path_parts = pathinfo($file);
-            $ext = $path_parts['extension'];
-            if(mb_strstr($ext, 'php')) { die(); }
-            $file = md5($file.time()).'.'.$ext;
-            $item['file'] = '/upload/greetings/' . $file;
-
-            if (@move_uploaded_file($tmp_name, PATH."/upload/greetings/".$file)){
-                if (isset($cfg['img_width'])) { $img_width = $cfg['img_width']; } else { $img_width = 150; }
-                @img_resize(PATH."/upload/greetings/$file", PATH."/upload/greetings/".$file, $img_width, $img_width, $cfg['thumbsqr']);
-                @chmod(PATH."/upload/greetings/".$file, 0644);
-            }
+            $file         = $model->uploadPhoto();
+            $item['file'] = $file['filename'];
             
         } else {
-            if($item['file']=='') { $item['file']='/upload/greetings/collection/default.jpg'; }
+            if($item['file']=='') { $item['file']='default.jpg'; }
         }
 
         $greeting_id = $model->addGreeting($item);
@@ -289,7 +280,6 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
     if ($opt == 'update_item'){
 
         if(!cmsCore::validateForm()) { cmsCore::error404(); }
-        $inCore->includeGraphics();
         
         if(cmsCore::inRequest('item_id')) {
             
@@ -303,33 +293,23 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
             $item['published']     = cmsCore::request('published', 'int');
             
             if (isset($_FILES["imgfile"]["name"]) && @$_FILES["imgfile"]["name"]!=''){
-
-                $tmp_name = $_FILES["imgfile"]["tmp_name"];
-                $file = $_FILES["imgfile"]["name"];
-                $path_parts = pathinfo($file);
-                $ext = $path_parts['extension'];
-                if(mb_strstr($ext, 'php')) { die(); }
-                $file = md5($file.time()).'.'.$ext;
-                $item['file'] = '/upload/greetings/' . $file;
-
-                if (@move_uploaded_file($tmp_name, PATH."/upload/greetings/".$file)){
-                    if (isset($cfg['img_width'])) { $img_width = $cfg['img_width']; } else { $img_width = 150; }
-                    @img_resize(PATH."/upload/greetings/$file", PATH."/upload/greetings/".$file, $img_width, $img_width, $cfg['thumbsqr']);
-                    @chmod(PATH."/upload/greetings/".$file, 0644);
-                }
+                
+                $file = $model->uploadPhoto();
+                $item['file'] = $file['filename'];
 
             } else {
-                if($item['file']=='') { $item['file']='/upload/greetings/collection/default.jpg'; }
+                if($item['file']=='') { $item['file']='default.jpg'; }
             }
 
-
+            
             if ($item['file'] != $greeting['file']) {
-                if (preg_match('/^(\/upload\/greetings\/)?([\da-z]+)\.(jpg|jpeg|bmp|png|gif)$/', $greeting['file'])) {
-                    @unlink(PATH . $greeting['file']);
+                if (!preg_match('/^greeting([a-z0-9]+)\.(jpg|png|gif)$/', $greeting['file']) && $greeting['file']!='default.jpg') {
+                    @unlink(PATH.'/upload/greetings/small/'.$greeting['file']);
+                    @unlink(PATH.'/upload/greetings/medium/'.$greeting['file']);
                 }
             }
             
-            $greeting_id = $model->updateGreeting($item, $item_id);
+            $model->updateGreeting($item, $item_id);
             
         }
     
@@ -361,6 +341,9 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 //=================================================================================================//
 
     if ($opt == 'add_item' || $opt == 'edit_item') {
+
+        $GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/components/greetings/js/greetings.js"></script>'; 
+        
         if ($opt == 'add_item') {
             echo '<h3>Добавить поздравление</h3>';
             cpAddPathway('Добавить поздравление', '?view=components&do=config&id='.$component_id.'&opt=add_item');
@@ -394,7 +377,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                 $mod = $inDB->fetch_assoc($result);
             }
 
-            if($mod['file']=='') { $mod['file']='/upload/greetings/collection/default.jpg'; }
+            if($mod['file']=='') { $mod['file']='default.jpg'; }
 
             echo '<h3>Редактировать поздравление</h3>';
             cpAddPathway('Поздравления', '?view=components&do=config&id='.$component_id . '&opt=list_items');
@@ -411,7 +394,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                     </td>
                 </tr>
                 <tr>
-                    <td><strong>Ваше имя:</strong></td>
+                    <td><strong>Заголовок поздравления:</strong></td>
                     <td>
                         <input name="title" type="text" size="52" id="title" value="<?php echo @$mod['title']; ?>" />
                     </td>
@@ -434,7 +417,7 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                 <tr>
                     <td colspan="3">
                         <div id="select_image">
-                            <img src="<?php echo @$mod['file']; ?>" id="choose_img" border="0" width="<?php echo $cfg['img_width']; ?>">
+                            <img src="/upload/greetings/small/<?php echo @$mod['file']; ?>" id="choose_img" border="0" width="<?php echo $cfg['thumb1']; ?>">
                         </div>
                     </td>
                 </tr>
@@ -443,9 +426,8 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                         <input id="file" name="file" type="hidden" value="<?php echo @$mod['file']; ?>">
                         <div id="user_image">
                             <div>Загрузить изображение</div>
-
                             <input name="imgfile" type="file" id="picture" size="33" /><br />
-                            <span id="file_tipes">Картинка jpg, jpeg, png, gif, bmp</span>
+                            <span id="file_tipes">Картинка jpg, png, gif</span>
                         </div>
                         <div class=clear></div>
                     </td>
@@ -453,66 +435,47 @@ if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
                         <?php if ($cfg['img_collection']) { ?>или
                     </td>
                     <td align="center">
-                        <a id="collection_link" style="display:block;" href="javascript:showCollection()">Выбрать из коллекции сайта</a>
+                        <a id="collection_link" style="display:block;" href="javascript:void(0)" onclick="greetings.showCollection();return false;">Выбрать из коллекции сайта</a>
                     </td>
                     <?php } ?>
                 </tr>
             </table>
         <?php if ($cfg['img_collection']) { ?>
             <div id="greetings_image">
-                
-                <?php 
-                    $GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/components/greetings/js/jquery.ui.widget.min.js"></script>'; 
-                    $GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/components/greetings/js/jquery.ui.mouse.min.js"></script>'; 
-                    $GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/components/greetings/js/jquery.ui.core.min.js"></script>'; 
-                    $GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/components/greetings/js/jquery.ui.selectable.min.js"></script>'; 
-                ?>
-
                     <style>
                         #feedback { font-size: 1.4em; }
-                        #selectable .ui-selecting { }
-                        #selectable li.ui-selected { border:3px solid #FECA40 !important;}
-                        #selectable .ui-state-default {border:3px solid #fff;cursor:pointer;}
-                        #selectable { list-style-type: none; margin: 0; padding: 0; }
-                        #selectable li { margin: 3px; padding: 1px; float: left;
-                        width:<?php echo $cfg['img_width']; ?>px;
-                        height:<?php echo $cfg['img_width']; ?>px;
-                        text-align: center; overflow: hidden;}
+                        #collist a.selected {
+                            border:3px solid #FECA40 !important;
+                        }
+                        #collist a {
+                            border:3px solid #fff;
+                            cursor:pointer;
+                            margin: 3px;
+                            padding: 1px;
+                            float: left;
+                            text-align: center;
+                            overflow: hidden;
+                            width:<?php echo $cfg['thumb1']; ?>px;
+                            height:<?php echo $cfg['thumb1']; ?>px;
+                        }
                         #file_tipes{font-size:11px;color:#666;}
                     </style>
                     <script>
                     $(function() {
-                            $("#selectable").selectable();
-                            $("#selectable").selectable({
-                                selected: function(event, ui) {
-                                    var file = $('#selectable .ui-selected').attr('rel');
-                                    $('#file').val(file);
-                                    $('#choose_img').attr('src', file);
-                                    hideCollection();
-                                    $('#select_image').show();
-                                }
-                            });
+                        $('#collist a').live('click', function(e){
+                            var selectimg = $(this).attr('rel');
+                            $('#file').val(selectimg);
+                            $('#choose_img').attr('src', '/upload/greetings/small/'+selectimg);
+                            greetings.hideCollection();
+                            $('#select_image').show();
+                            $('#collist a').removeClass('selected');
+                            $(this).addClass('selected');
+                        });
                     });
-                    function showCollection(){
-                        $('#collection_block').slideUp('fast');
-                        $('#collection_block').slideDown('fast');
-                        $('#collection_link').hide();
-                    }
-                    function hideCollection(){
-                        $('#collection_block').slideDown('fast');
-                        $('#collection_block').slideUp('fast');
-                        $('#collection_link').show();
-                    }
-                    function selectDefault(){
-                        $('#file').val('/upload/greetings/collection/default.jpg');
-                        $('#choose_img').attr('src', '/upload/greetings/collection/default.jpg');
-                        hideCollection();
-                        $('#select_image').show();
-                    }
                     </script>
                 <div id="collection_block" style="display:none;">
                     <p>Нажмите на изображение понравившегося фото</p>
-                    <?php echo $model->CollectionList($cfg['img_width']); ?>
+                    <?php echo $model->CollectionList($cfg['thumb1']); ?>
                 </div>
             </div>
             <div class=clear></div>

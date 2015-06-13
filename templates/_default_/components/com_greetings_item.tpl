@@ -1,19 +1,20 @@
 {* ================================================================================ *}
 {* ==================== Просмотр поздравления ===================================== *}
 {* ================================================================================ *}
-<h1 class="con_heading">{$item.title}</h1>
-<p class="gr_item_date">{$item.pubdate}</p>
+<h1 class="con_heading" style="text-align: center;">{$item.title}</h1>
 
-<table cellspacing="10" cellpadding="10" class="gr_item_full">
+<table width="100%" cellspacing="10" cellpadding="10" class="gr_item_full">
     <tr>
         {if $item.file}
-            <td valign="top">
-                <img src="{$item.file}" border="0" alt="{$item.title|escape:'html'}"/>
+            <td valign="top" align="center">
+                <img src="/upload/greetings/medium/{$item.file}" border="0" alt="{$item.title|escape:'html'}"/>
             </td>
         {/if}
-        <td valign="top">
+    </tr>
+    <tr>
+        <td valign="top"  align="center">
             <div class="gr_text_full">
-            	<p>{$item.description}</p>
+            	{$item.description}
             </div>
         </td>
     </tr>

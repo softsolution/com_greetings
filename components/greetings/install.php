@@ -9,7 +9,12 @@
         $_component['link'] = 'greetings';
         $_component['author'] = '<a href="http://soft-solution.ru">soft-solution.ru</a>';
         $_component['internal'] = '0';
-        $_component['version'] = '1.1';
+        $_component['version'] = '1.2';
+        
+        $inCore = cmsCore::getInstance();
+        $inCore->loadModel('greetings');
+        
+        $_component['config'] = cms_model_greetings::getDefaultConfig();
 
         return $_component;
     }

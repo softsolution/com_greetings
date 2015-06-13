@@ -136,8 +136,16 @@ div.greetings_details a{
 }
 
 #feedback { font-size: 1.4em; }
-#selectable .ui-selecting { }
-#selectable li.ui-selected { border:3px solid #FECA40 !important;}
-#selectable .ui-state-default {border:3px solid #fff;cursor:pointer;}
-#selectable { list-style-type: none; margin: 0; padding: 0; }
-#selectable li { margin: 3px; padding: 1px; float: left; text-align: center; overflow: hidden;}
+
+#collist a.selected {
+    border:3px solid #FECA40 !important;
+}
+#collist a {
+    border:3px solid #fff;
+    cursor:pointer;
+    margin: 3px;
+    padding: 1px;
+    float: left;
+    text-align: center;
+    overflow: hidden;
+}

@@ -18,7 +18,9 @@
     {if $cfg.showimages!=0}
         <td width="{$cfg.imagewidth}" valign=top>
             <div class="mod_greeting_image">
-                <img src="{$greeting.file}" border="0" width="{$cfg.imagewidth}" />
+                <a href="/greetings/read{$greeting.id}.html">
+                    <img src="/upload/greetings/small/{$greeting.file}" border="0" alt="{$greeting.title|escape:'html'}"/>
+                </a>
             </div>
         </td>
     {/if}

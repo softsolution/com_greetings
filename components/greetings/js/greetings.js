@@ -20,10 +20,11 @@ $(function(){
         $('#collection_link').show();
     },
     selectDefault: function() {
-        $('#file').val('/upload/greetings/collection/default.jpg');
-        $('#choose_img').attr('src', '/upload/greetings/collection/default.jpg');
+        $('#file').val('default.jpg');
+        $('#choose_img').attr('src', '/upload/greetings/small/default.jpg');
         greetings.hideCollection();
         $('#select_image').show();
-    },    
+        $('#collist a').removeClass('selected');
+    }
   }
 });

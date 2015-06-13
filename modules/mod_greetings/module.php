@@ -78,14 +78,14 @@ function mod_greetings($module_id){
 	return true;
 }
 
-function existImage($imageurl) {
-    if (!$imageurl) {
-        return '/upload/greetings/collection/default.jpg';
+function existImage($imagefile) {
+    if (!$imagefile) {
+        return 'default.jpg';
     }
-    if ($imageurl && @file_exists(PATH . '' . $imageurl)) {
-        return $imageurl;
+    if ($imagefile && @file_exists(PATH . '/upload/greetings/small/' . $imagefile)) {
+        return $imagefile;
     } else {
-        return '/upload/greetings/collection/default.jpg';
+        return 'default.jpg';
     }
 }
 

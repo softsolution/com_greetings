@@ -18,7 +18,7 @@
         <tr id="mt_item" {if $smarty.foreach.foo.index % 2}class="bg_light"{else}class="bg_dark"{/if}>
             <td id="greeting_image">
                 <a href="/greetings/read{$item.id}.html">
-                    <img src="{$item.file}" width="{$cfg.img_width}">
+                    <img src="/upload/greetings/small/{$item.file}" border="0" alt="{$item.title|escape:'html'}"/>
                 </a>
             </td>
             <td id="greeting_text">
@@ -33,7 +33,6 @@
                     </span>
                 </div>
                 {/if}
-                
             </td>
         </tr>
     {/foreach}

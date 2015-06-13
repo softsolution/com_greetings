@@ -2,6 +2,7 @@
 <div class=clear></div>
 
 <form action="" method="POST" name="greetingsform" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" id="csrf_token" value="{csrf_token}" />
     <input name="title_fake" type="text" id="title_fake" maxlength="250"  value=""/>
     <table id="add_table_greeting">
         <tr>
@@ -26,7 +27,7 @@
         </tr>
     </table>
 
-    <div id="select_image" style="display:{if $do==edit}block{else}none{/if};"><img id="choose_img" src="{$item.file}" border="0" width="{$cfg.img_width}"></div>
+    <div id="select_image" style="display:{if $do==edit}block{else}none{/if};"><img id="choose_img" src="/upload/greetings/small/{$item.file}" border="0" width="{$cfg.thumb1}"></div>
     <input id="file" name="file" type="hidden" value="{$item.file}">
 
     {* Коллекция картирок *}
@@ -34,30 +35,25 @@
         {* Выбор картинки из коллекции сайта *}
         <div id="greetings_image">
             <a id="collection_link" style="display:block;" href="javascript:void(0)" onclick="greetings.showCollection();return false;">{$LANG.CHOOSE_FROM_COLLECTION}</a>
-            {add_js file='components/greetings/js/jquery.ui.widget.min.js'}
-            {add_js file='components/greetings/js/jquery.ui.mouse.min.js'}
-            {add_js file='components/greetings/js/jquery.ui.core.min.js'}
-            {add_js file='components/greetings/js/jquery.ui.selectable.min.js'}
             {literal}
                 <style>
-                #selectable li {
+                #collist a {
                 {/literal}
-                width:{$cfg.img_width}px;
-                height:{$cfg.img_width}px;
+                width:{$cfg.thumb1}px;
+                height:{$cfg.thumb1}px;
                 {literal}
                 }
                 </style>
                 <script type="text/javascript">
                 $(function() {
-                    $("#selectable").selectable();
-                    $("#selectable").selectable({
-                        selected: function(event, ui) {
-                            var file = $('#selectable .ui-selected').attr('rel');
-                            $('#file').val(file);
-                            $('#choose_img').attr('src', file);
-                            greetings.hideCollection();
-                            $('#select_image').show();
-                        }
+                    $('#collist a').live('click', function(e){
+                        var selectimg = $(this).attr('rel');
+                        $('#file').val(selectimg);
+                        $('#choose_img').attr('src', '/upload/greetings/small/'+selectimg);
+                        greetings.hideCollection();
+                        $('#select_image').show();
+                        $('#collist a').removeClass('selected');
+                        $(this).addClass('selected');
                     });
                 });
                 </script>
