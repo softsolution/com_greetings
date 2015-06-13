@@ -9,10 +9,10 @@
 
 {if !$is_ajax}<div id="module_ajax_{$module_id}" >{/if}
 <div id="module_id" data-module-id="{$module_id}"></div>
-{* Форма добавления поздравления *}
+{* Р¤РѕСЂРјР° РґРѕР±Р°РІР»РµРЅРёСЏ РїРѕР·РґСЂР°РІР»РµРЅРёСЏ *}
 {if $cfg.addgreetings==1}
 <div id="mod_greetings_add">
-    <a class="mod_greetings_addlink" href="javascript:getForm({$module_id})">Добавить поздравление</a>
+    <a class="mod_greetings_addlink" href="javascript:getForm({$module_id})">Р”РѕР±Р°РІРёС‚СЊ РїРѕР·РґСЂР°РІР»РµРЅРёРµ</a>
     <div id="greeting_preloader" style="display:none;"></div>
     <div id="add_greetingform" style="display:none;"></div>
 </div>
@@ -48,9 +48,9 @@
     <div class="mod_greetings_pagebar">{$pagebar_module}</div>
 {/if}
 
-<a class="mod_greetings_all" href="/greetings">Все поздравления</a>
+<a class="mod_greetings_all" href="/greetings">Р’СЃРµ РїРѕР·РґСЂР°РІР»РµРЅРёСЏ</a>
 
 {if !$is_ajax}</div>{/if}
 {else}
-    <p>Нет поздравлений</p>
+    <p>РќРµС‚ РїРѕР·РґСЂР°РІР»РµРЅРёР№</p>
 {/if}

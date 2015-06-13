@@ -1,4 +1,4 @@
-{* Файл стилей, при использовании не стандартного шаблона измените путь к этому файлу *}
+{* Р¤Р°Р№Р» СЃС‚РёР»РµР№, РїСЂРё РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРё РЅРµ СЃС‚Р°РЅРґР°СЂС‚РЅРѕРіРѕ С€Р°Р±Р»РѕРЅР° РёР·РјРµРЅРёС‚Рµ РїСѓС‚СЊ Рє СЌС‚РѕРјСѓ С„Р°Р№Р»Сѓ *}
 {add_css file='templates/_default_/css/greetings.css'}
 
 {if $do=='edit'}
@@ -23,14 +23,14 @@
             </td></tr>
     </table>
 
-    {* Картинка *}
+    {* РљР°СЂС‚РёРЅРєР° *}
     <div id="select_image" style="display:{if $do==edit}block{else}none{/if};"><img id="choose_img" src="{$item.file}" border="0" width="{$cfg.img_width}"></div>
     <input id="file" name="file" type="hidden" value="{$item.file}">
-    {* /Картинка *}
+    {* /РљР°СЂС‚РёРЅРєР° *}
 
-    {* Коллекция картирок *}
+    {* РљРѕР»Р»РµРєС†РёСЏ РєР°СЂС‚РёСЂРѕРє *}
     {if $cfg.img_collection}
-        {* Выбор картинки из коллекции сайта *}
+        {* Р’С‹Р±РѕСЂ РєР°СЂС‚РёРЅРєРё РёР· РєРѕР»Р»РµРєС†РёРё СЃР°Р№С‚Р° *}
         <div id="greetings_image">
             <a id="collection_link" style="display:block;" href="javascript:showCollection()">{$LANG.CHOOSE_FROM_COLLECTION}</a>
             {add_js file='components/greetings/js/jquery.ui.widget.min.js'}
@@ -89,7 +89,7 @@
         <div class=clear></div>
     {/if}
 
-    {* Картинка пользователя *}
+    {* РљР°СЂС‚РёРЅРєР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ *}
     {if $cfg.user_image && ($user_id || (!$user_id && $cfg.guest_image))}
         <div id="user_image">
             <div>{$LANG.LOAD_IMAGE}</div>

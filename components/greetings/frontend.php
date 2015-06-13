@@ -15,7 +15,7 @@ function greetings() {
 
     $cfg = $inCore->loadComponentConfig('greetings');
 
-    // Ïğîâåğÿåì âêëş÷åí ëè êîìïîíåíò
+    // ĞŸÑ€Ğ¾Ğ²ĞµÑ€ÑĞµĞ¼ Ğ²ĞºĞ»ÑÑ‡ĞµĞ½ Ğ»Ğ¸ ĞºĞ¾Ğ¼Ğ¿Ğ¾Ğ½ĞµĞ½Ñ‚
     if (!$cfg['component_enabled']) {
         cmsCore::error404();
     }
@@ -41,7 +41,7 @@ function greetings() {
     $cfg['img_width'] = $cfg['img_width'] ? $cfg['img_width']  : 150;
 
 /* ==================================================================================================== */
-/* ========================== ËÅÍÒÀ ÏÎÇÄĞÀÂËÅÍÈÉ ====================================================== */
+/* ========================== Ğ›Ğ•ĞĞ¢Ğ ĞŸĞĞ—Ğ”Ğ ĞĞ’Ğ›Ğ•ĞĞ˜Ğ™ ====================================================== */
 /* ==================================================================================================== */
 
     if ($do == 'view') {
@@ -61,7 +61,7 @@ function greetings() {
 
         $result = $inDB->query($sql);
 
-        //äëÿ êîğğåêòíîé ïàãèíàöèè ñ÷èòàåì êîëè÷åñòâî îòäåëüíî
+        //Ğ´Ğ»Ñ ĞºĞ¾Ñ€Ñ€ĞµĞºÑ‚Ğ½Ğ¾Ğ¹ Ğ¿Ğ°Ğ³Ğ¸Ğ½Ğ°Ñ†Ğ¸Ğ¸ ÑÑ‡Ğ¸Ñ‚Ğ°ĞµĞ¼ ĞºĞ¾Ğ»Ğ¸Ñ‡ĞµÑÑ‚Ğ²Ğ¾ Ğ¾Ñ‚Ğ´ĞµĞ»ÑŒĞ½Ğ¾
         $sql2 = "SELECT 1 FROM cms_greetings g";
         if ($target=='my') { $where .= " AND g.user_id = $user_id"; } 
         if (!$is_admin)    { $where .= " AND g.published = 1"; }
@@ -74,7 +74,7 @@ function greetings() {
         if ($inDB->num_rows($result)) {
             $greetings = array();
             while ($greeting = $inDB->fetch_assoc($result)) {
-                $greeting['pubdate']     = $inCore->dateFormat($greeting['pubdate'], true, false);//äàòà
+                $greeting['pubdate']     = $inCore->dateFormat($greeting['pubdate'], true, false);//Ğ´Ğ°Ñ‚Ğ°
                 $greeting['author']      = cmsUser::getProfileLink($greeting['login'], $greeting['author']);
                 $greeting['description'] = nl2br($greeting['description']);
                 $greeting['file'] = existImage($greeting['file']);
@@ -106,24 +106,24 @@ function greetings() {
     }
 
 /* ==================================================================================================== */
-/* ========================== ÏĞÎÑÌÎÒĞ ÏÎÇÄĞÀÂËÅÍÈß =================================================== */
+/* ========================== ĞŸĞ ĞĞ¡ĞœĞĞ¢Ğ  ĞŸĞĞ—Ğ”Ğ ĞĞ’Ğ›Ğ•ĞĞ˜Ğ¯ =================================================== */
 /* ==================================================================================================== */
-//ÏÎÊÀ ÍÅ ÈÑÏÎËÜÇÓÅÒÑß
+//ĞŸĞĞšĞ ĞĞ• Ğ˜Ğ¡ĞŸĞĞ›Ğ¬Ğ—Ğ£Ğ•Ğ¢Ğ¡Ğ¯
 //    if ($do == 'read') {
 //    }
     
 /* ==================================================================================================== */
-/* ========================== ÄÎÁÀÂËßÅÌ ÏÎÇÄĞÀÂËÅÍÈÅ ================================================== */
+/* ========================== Ğ”ĞĞ‘ĞĞ’Ğ›Ğ¯Ğ•Ğœ ĞŸĞĞ—Ğ”Ğ ĞĞ’Ğ›Ğ•ĞĞ˜Ğ• ================================================== */
 /* ==================================================================================================== */
     
     if ($do == 'add') {
 
-        //åñëè íå àâòîğèçîâàí, ïåğåáğàñûâàåì íà ññûëêó äëÿ àâòîğèçàöèè
+        //ĞµÑĞ»Ğ¸ Ğ½Ğµ Ğ°Ğ²Ñ‚Ğ¾Ñ€Ğ¸Ğ·Ğ¾Ğ²Ğ°Ğ½, Ğ¿ĞµÑ€ĞµĞ±Ñ€Ğ°ÑÑ‹Ğ²Ğ°ĞµĞ¼ Ğ½Ğ° ÑÑÑ‹Ğ»ĞºÑƒ Ğ´Ğ»Ñ Ğ°Ğ²Ñ‚Ğ¾Ñ€Ğ¸Ğ·Ğ°Ñ†Ğ¸Ğ¸
         if (!$inUser->id && !$cfg['guest_enabled']){ cmsUser::goToLogin(); }
         
-         //åñëè óñòàíîâëåíî îãğàíè÷åíèå ïî äîáàâëåíèş ïîçäğàâëåíèé
-        //îò îäíîãî ïîëüçîâàòåëÿ 
-        //ñ÷èòàåì ñêîëüêî îáúÿâëåíèé ïîëüçîâàòåëü äîáàâèë ñåãîäíÿ
+         //ĞµÑĞ»Ğ¸ ÑƒÑÑ‚Ğ°Ğ½Ğ¾Ğ²Ğ»ĞµĞ½Ğ¾ Ğ¾Ğ³Ñ€Ğ°Ğ½Ğ¸Ñ‡ĞµĞ½Ğ¸Ğµ Ğ¿Ğ¾ Ğ´Ğ¾Ğ±Ğ°Ğ²Ğ»ĞµĞ½Ğ¸Ñ Ğ¿Ğ¾Ğ·Ğ´Ñ€Ğ°Ğ²Ğ»ĞµĞ½Ğ¸Ğ¹
+        //Ğ¾Ñ‚ Ğ¾Ğ´Ğ½Ğ¾Ğ³Ğ¾ Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ñ 
+        //ÑÑ‡Ğ¸Ñ‚Ğ°ĞµĞ¼ ÑĞºĞ¾Ğ»ÑŒĞºĞ¾ Ğ¾Ğ±ÑŠÑĞ²Ğ»ĞµĞ½Ğ¸Ğ¹ Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»ÑŒ Ğ´Ğ¾Ğ±Ğ°Ğ²Ğ¸Ğ» ÑĞµĞ³Ğ¾Ğ´Ğ½Ñ
         if ($cfg['amount']!=0 && !$is_admin){
             $user_ip = $inUser->ip;
             $amount_today = $inDB->rows_count('cms_greetings', "DATE(pubdate) BETWEEN DATE(NOW()) AND DATE_ADD(DATE(NOW()), INTERVAL 1 DAY) AND ip = '$user_ip'");
@@ -151,7 +151,7 @@ function greetings() {
 
         if ($is_submit && !$inUser->id && !$inCore->checkCaptchaCode($inCore->request('code', 'str'))) { $error .= $_LANG['ERR_CAPTCHA']; }
         
-        //èçîáğàæåíèå ïîëüçîâàòåëÿ
+        //Ğ¸Ğ·Ğ¾Ğ±Ñ€Ğ°Ğ¶ĞµĞ½Ğ¸Ğµ Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ñ
         if ($inCore->inRequest('upload') && isset($_FILES["picture"]["name"]) && @$_FILES["picture"]["name"]!='' && $cfg['user_image'] && ($user_id || (!$user_id && $cfg['guest_image']))) {
 
                 $inCore->includeGraphics();
@@ -192,13 +192,13 @@ function greetings() {
                 if ($validation) { cmsUser::sessionDel('valid_greetings'); }
             }
             
-            //åñëè çíà÷åíèå $item ïóñòîå âûòàñêèâàåì äàííûå èç ïğîôèëÿ
+            //ĞµÑĞ»Ğ¸ Ğ·Ğ½Ğ°Ñ‡ĞµĞ½Ğ¸Ğµ $item Ğ¿ÑƒÑÑ‚Ğ¾Ğµ Ğ²Ñ‹Ñ‚Ğ°ÑĞºĞ¸Ğ²Ğ°ĞµĞ¼ Ğ´Ğ°Ğ½Ğ½Ñ‹Ğµ Ğ¸Ğ· Ğ¿Ñ€Ğ¾Ñ„Ğ¸Ğ»Ñ
             if(!$item && $user_id!='') {
                $item['title'] = $inDB->get_field('cms_users', "id='{$user_id}'", 'nickname');
                $item['file']  = "/upload/greetings/collection/default.jpg";
             }
 
-            //êàğòèíêà èç êîëëåêöèè ñàéòà
+            //ĞºĞ°Ñ€Ñ‚Ğ¸Ğ½ĞºĞ° Ğ¸Ğ· ĞºĞ¾Ğ»Ğ»ĞµĞºÑ†Ğ¸Ğ¸ ÑĞ°Ğ¹Ñ‚Ğ°
             if($cfg['img_collection']){
                 $collection_list = $model->CollectionList($cfg['img_width']);
             }
@@ -215,7 +215,7 @@ function greetings() {
 
         } else {
             
-            //ïğîâåğÿåì äàííûå
+            //Ğ¿Ñ€Ğ¾Ğ²ĞµÑ€ÑĞµĞ¼ Ğ´Ğ°Ğ½Ğ½Ñ‹Ğµ
             $errors = false;
 	    $validation = array();
 
@@ -223,7 +223,7 @@ function greetings() {
             
             if ($errors) {
 
-                //ıêğàíèğóåì ñèìâîëû
+                //ÑĞºÑ€Ğ°Ğ½Ğ¸Ñ€ÑƒĞµĞ¼ ÑĞ¸Ğ¼Ğ²Ğ¾Ğ»Ñ‹
                 $item['description']   = htmlspecialchars(stripslashes($_REQUEST['description']));
                 $item['title']         = stripslashes($item['title']);
 
@@ -235,7 +235,7 @@ function greetings() {
             
             if (!$errors) {
                 
-                //äîïîëíèòåëüíàÿ îáğàáîòêà ïîëåé
+                //Ğ´Ğ¾Ğ¿Ğ¾Ğ»Ğ½Ğ¸Ñ‚ĞµĞ»ÑŒĞ½Ğ°Ñ Ğ¾Ğ±Ñ€Ğ°Ğ±Ğ¾Ñ‚ĞºĞ° Ğ¿Ğ¾Ğ»ĞµĞ¹
                 $item['user_id'] = $user_id;
                 $item['ip']      = $inUser->ip;
                 $item['published']     = $published;
@@ -253,7 +253,7 @@ function greetings() {
                 @unlink($uploadfile);
                 }
 
-                //äîáàâëÿåì ïîçäğàâëåíèå
+                //Ğ´Ğ¾Ğ±Ğ°Ğ²Ğ»ÑĞµĞ¼ Ğ¿Ğ¾Ğ·Ğ´Ñ€Ğ°Ğ²Ğ»ĞµĞ½Ğ¸Ğµ
                 $greeting_id = $model->addGreeting($item);
                 
                 if (IS_BILLING && $inUser->id){ cmsBilling::process('greetings', 'add_greetings'); }
@@ -270,12 +270,12 @@ function greetings() {
     }
     
 /* ==================================================================================================== */
-/* ========================== ĞÅÄÀÊÒÈĞÓÅÌ ÏÎÇÄĞÀÂËÅÍÈÅ ================================================ */
+/* ========================== Ğ Ğ•Ğ”ĞĞšĞ¢Ğ˜Ğ Ğ£Ğ•Ğœ ĞŸĞĞ—Ğ”Ğ ĞĞ’Ğ›Ğ•ĞĞ˜Ğ• ================================================ */
 /* ==================================================================================================== */
     
 if ($do == 'edit') {
 
-        //åñëè íå àâòîğèçîâàí, ïåğåáğàñûâàåì íà ññûëêó äëÿ àâòîğèçàöèè
+        //ĞµÑĞ»Ğ¸ Ğ½Ğµ Ğ°Ğ²Ñ‚Ğ¾Ñ€Ğ¸Ğ·Ğ¾Ğ²Ğ°Ğ½, Ğ¿ĞµÑ€ĞµĞ±Ñ€Ğ°ÑÑ‹Ğ²Ğ°ĞµĞ¼ Ğ½Ğ° ÑÑÑ‹Ğ»ĞºÑƒ Ğ´Ğ»Ñ Ğ°Ğ²Ñ‚Ğ¾Ñ€Ğ¸Ğ·Ğ°Ñ†Ğ¸Ğ¸
         if (!$inUser->id) {
             cmsUser::goToLogin();
         }
@@ -286,7 +286,7 @@ if ($do == 'edit') {
             cmsCore::error404();
         }
 
-        //åñëè õîçÿèí èëè àäìèí òî ğàçğåøàåì ğåäàêòèğîâàíèå
+        //ĞµÑĞ»Ğ¸ Ñ…Ğ¾Ğ·ÑĞ¸Ğ½ Ğ¸Ğ»Ğ¸ Ğ°Ğ´Ğ¼Ğ¸Ğ½ Ñ‚Ğ¾ Ñ€Ğ°Ğ·Ñ€ĞµÑˆĞ°ĞµĞ¼ Ñ€ĞµĞ´Ğ°ĞºÑ‚Ğ¸Ñ€Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ
         if ($is_admin || $inUser->id == $greeting['user_id']) {
 
             $error = '';
@@ -296,7 +296,7 @@ if ($do == 'edit') {
             $item['description']   = $inCore->request('description', 'str', '');
             $item['file']          = $inCore->request('file', 'str', '');
             
-            //èçîáğàæåíèå ïîëüçîâàòåëÿ
+            //Ğ¸Ğ·Ğ¾Ğ±Ñ€Ğ°Ğ¶ĞµĞ½Ğ¸Ğµ Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»Ñ
             if ($inCore->inRequest('upload') && isset($_FILES["picture"]["name"]) && @$_FILES["picture"]["name"]!='') {
 
                     $inCore->includeGraphics();
@@ -342,10 +342,10 @@ if ($do == 'edit') {
                     if ($validation) { cmsUser::sessionDel('valid_greetings'); }
                 }
 
-                //åñëè çíà÷åíèå $item ïóñòîå ïîëó÷àåì äàííûå
+                //ĞµÑĞ»Ğ¸ Ğ·Ğ½Ğ°Ñ‡ĞµĞ½Ğ¸Ğµ $item Ğ¿ÑƒÑÑ‚Ğ¾Ğµ Ğ¿Ğ¾Ğ»ÑƒÑ‡Ğ°ĞµĞ¼ Ğ´Ğ°Ğ½Ğ½Ñ‹Ğµ
                 if ($item!='') { $item = $greeting; }
 
-                //êàğòèíêà èç êîëëåêöèè ñàéòà
+                //ĞºĞ°Ñ€Ñ‚Ğ¸Ğ½ĞºĞ° Ğ¸Ğ· ĞºĞ¾Ğ»Ğ»ĞµĞºÑ†Ğ¸Ğ¸ ÑĞ°Ğ¹Ñ‚Ğ°
                 if ($cfg['img_collection']) {
                     $collection_list = $model->CollectionList($cfg['img_width']);
                 }
@@ -362,7 +362,7 @@ if ($do == 'edit') {
                 
             } else {
                 
-                //ïğîâåğÿåì äàííûå
+                //Ğ¿Ñ€Ğ¾Ğ²ĞµÑ€ÑĞµĞ¼ Ğ´Ğ°Ğ½Ğ½Ñ‹Ğµ
                 $errors = false;
                 $validation = array();
 
@@ -370,7 +370,7 @@ if ($do == 'edit') {
 
                 if ($errors) {
 
-                    //ıêğàíèğóåì ñèìâîëû
+                    //ÑĞºÑ€Ğ°Ğ½Ğ¸Ñ€ÑƒĞµĞ¼ ÑĞ¸Ğ¼Ğ²Ğ¾Ğ»Ñ‹
                     $item['description']   = htmlspecialchars(stripslashes($_REQUEST['description']));
                     $item['title']         = stripslashes($item['title']);
 
@@ -397,13 +397,13 @@ if ($do == 'edit') {
                     }
                     
                     if($item['file']!=$greeting['file']){
-                        //óäàëÿåì ñòàğîå èçîáğàæåíèå, åñëè îíî áûëî çàãğóæåíî ïîëüçîâàòåëåì
+                        //ÑƒĞ´Ğ°Ğ»ÑĞµĞ¼ ÑÑ‚Ğ°Ñ€Ğ¾Ğµ Ğ¸Ğ·Ğ¾Ğ±Ñ€Ğ°Ğ¶ĞµĞ½Ğ¸Ğµ, ĞµÑĞ»Ğ¸ Ğ¾Ğ½Ğ¾ Ğ±Ñ‹Ğ»Ğ¾ Ğ·Ğ°Ğ³Ñ€ÑƒĞ¶ĞµĞ½Ğ¾ Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»ĞµĞ¼
                         if (preg_match('/^(\/upload\/greetings\/)?([\da-z]+)\.(jpg)$/', $greeting['file'])) {
                                 @unlink(PATH.$greeting['file']);
                         }
                     }
 
-                    //îáíîâëÿåì ïîçäğàâëåíèå
+                    //Ğ¾Ğ±Ğ½Ğ¾Ğ²Ğ»ÑĞµĞ¼ Ğ¿Ğ¾Ğ·Ğ´Ñ€Ğ°Ğ²Ğ»ĞµĞ½Ğ¸Ğµ
                     $greeting_id = $model->updateGreeting($item, $id);
 
                     cmsCore::addSessionMessage($_LANG['EDIT_GREETINGS_SUCCESS'], 'success');
@@ -418,19 +418,19 @@ if ($do == 'edit') {
     }
 
 /* ==================================================================================================== */
-/* ========================== ÓÄÀËßÅÌ ÏÎÇÄĞÀÂËÅÍÈÅ ==================================================== */
+/* ========================== Ğ£Ğ”ĞĞ›Ğ¯Ğ•Ğœ ĞŸĞĞ—Ğ”Ğ ĞĞ’Ğ›Ğ•ĞĞ˜Ğ• ==================================================== */
 /* ==================================================================================================== */
     
     if ($do == 'delete') {
 
-        //åñëè íå àâòîğèçîâàí, ïåğåáğàñûâàåì íà ññûëêó äëÿ àâòîğèçàöèè
+        //ĞµÑĞ»Ğ¸ Ğ½Ğµ Ğ°Ğ²Ñ‚Ğ¾Ñ€Ğ¸Ğ·Ğ¾Ğ²Ğ°Ğ½, Ğ¿ĞµÑ€ĞµĞ±Ñ€Ğ°ÑÑ‹Ğ²Ğ°ĞµĞ¼ Ğ½Ğ° ÑÑÑ‹Ğ»ĞºÑƒ Ğ´Ğ»Ñ Ğ°Ğ²Ñ‚Ğ¾Ñ€Ğ¸Ğ·Ğ°Ñ†Ğ¸Ğ¸
         if (!$inUser->id){ cmsUser::goToLogin(); }
 
         $greeting = $inDB->get_fields('cms_greetings', "id='$id'", "user_id, file, id");
 
         if(!$greeting['id']) { cmsCore::error404(); }
 
-        //ïğîâåğÿåì èìååò ëè ïîëüçîâàòåëü ïğàâî óäàëèòü
+        //Ğ¿Ñ€Ğ¾Ğ²ĞµÑ€ÑĞµĞ¼ Ğ¸Ğ¼ĞµĞµÑ‚ Ğ»Ğ¸ Ğ¿Ğ¾Ğ»ÑŒĞ·Ğ¾Ğ²Ğ°Ñ‚ĞµĞ»ÑŒ Ğ¿Ñ€Ğ°Ğ²Ğ¾ ÑƒĞ´Ğ°Ğ»Ğ¸Ñ‚ÑŒ
         if ($is_admin || $inUser->id == $greeting['user_id']) {
             
             $model->deleteGreeting($id);
@@ -461,7 +461,7 @@ function AccessDenied() {
     $inCore = cmsCore::getInstance();
     $smarty = $inCore->initSmarty('components', 'com_error.tpl');
     $smarty->assign('err_title', $_LANG['ACCESS_DENIED']);
-    $smarty->assign('err_content', 'Íåäîñòàòî÷íî ïğàâ');
+    $smarty->assign('err_content', 'ĞĞµĞ´Ğ¾ÑÑ‚Ğ°Ñ‚Ğ¾Ñ‡Ğ½Ğ¾ Ğ¿Ñ€Ğ°Ğ²');
     $smarty->display('com_error.tpl');
     return;
 }

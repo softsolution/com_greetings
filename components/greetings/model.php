@@ -120,10 +120,10 @@ public function CollectionList($img_width) {
     }
 
     if (!$n) {
-        $html = '<p>Папка "/upload/greetings/collection" пуста!</p>';
+        $html = '<p>РџР°РїРєР° "/upload/greetings/collection" РїСѓСЃС‚Р°!</p>';
     }
 
-    $html .='<div align="right" style="clear:both">[<a href="javascript:selectDefault(\'\')">По умолчанию</a>] [<a href="javascript:hideCollection()">Закрыть</a>]</div>';
+    $html .='<div align="right" style="clear:both">[<a href="javascript:selectDefault(\'\')">РџРѕ СѓРјРѕР»С‡Р°РЅРёСЋ</a>] [<a href="javascript:hideCollection()">Р—Р°РєСЂС‹С‚СЊ</a>]</div>';
 
     return $html;
 }

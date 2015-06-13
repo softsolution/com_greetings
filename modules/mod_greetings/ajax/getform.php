@@ -3,62 +3,41 @@
 /*            created by soft-solution.ru           */
 /*==================================================*/
 
-    if($_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') { die(); }
-	header('Content-Type: text/html; charset=windows-1251'); 
-	session_start();
+	define('PATH', $_SERVER['DOCUMENT_ROOT']);
+	include(PATH.'/core/ajax/ajax_core.php');
 
     if (!isset($_REQUEST['module_id'])) { die(2); }
 
-    define("VALID_CMS", 1);
-    define('PATH', $_SERVER['DOCUMENT_ROOT']);
-
-    // Грузим ядро и классы
-    include(PATH.'/core/cms.php');
-    
-    // Грузим конфиг
-    include(PATH.'/includes/config.inc.php');
-    $inCore = cmsCore::getInstance();
-
-    define('HOST', 'http://' . $inCore->getHost());
-    
-    $inCore->loadClass('config'); 
-    $inCore->loadClass('db'); 
-    $inCore->loadClass('user');
-    $inCore->loadClass('page');
-    $inDB   = cmsDatabase::getInstance();
-    $inUser = cmsUser::getInstance();
-    $inUser->update();
-    
     $is_admin  = $inCore->userIsAdmin($inUser->id);
     $user_id   = $inUser->id;
     
-    // Грузим шаблонизатор
+    // Р“СЂСѓР·РёРј С€Р°Р±Р»РѕРЅРёР·Р°С‚РѕСЂ
     $smarty = $inCore->initSmarty();
 
-    // Входные данные
+    // Р’С…РѕРґРЅС‹Рµ РґР°РЅРЅС‹Рµ
     $module_id	= $inCore->request('module_id', 'int', '');
     
-    //Загружаем конфигурацию компонента
+    //Р—Р°РіСЂСѓР¶Р°РµРј РєРѕРЅС„РёРіСѓСЂР°С†РёСЋ РєРѕРјРїРѕРЅРµРЅС‚Р°
     $cfg_com = $inCore->loadComponentConfig('greetings');
     
     if(!$cfg_com['guest_enabled'] && !$user_id){
-        echo '<input name="formexist" id="formexist" type="hidden" value="guest_enabled"><span id="guest_enabled" class="mod_greetings_errors">Поздравления могут добавлять только зарегистрированные пользователи</span>'; 
+        echo '<input name="formexist" id="formexist" type="hidden" value="guest_enabled"><span id="guest_enabled" class="mod_greetings_errors">РџРѕР·РґСЂР°РІР»РµРЅРёСЏ РјРѕРіСѓС‚ РґРѕР±Р°РІР»СЏС‚СЊ С‚РѕР»СЊРєРѕ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅС‹Рµ РїРѕР»СЊР·РѕРІР°С‚РµР»Рё</span>'; 
         return;
         }
-    //если установлено ограничение на количество поздравлений в сутки,
-    //считаем сколько объявлений пользователь добавил сегодня
+    //РµСЃР»Рё СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ РѕРіСЂР°РЅРёС‡РµРЅРёРµ РЅР° РєРѕР»РёС‡РµСЃС‚РІРѕ РїРѕР·РґСЂР°РІР»РµРЅРёР№ РІ СЃСѓС‚РєРё,
+    //СЃС‡РёС‚Р°РµРј СЃРєРѕР»СЊРєРѕ РѕР±СЉСЏРІР»РµРЅРёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РґРѕР±Р°РІРёР» СЃРµРіРѕРґРЅСЏ
         if ($cfg_com['amount']!=0 && !$is_admin){
             $user_ip = $inUser->ip;
             $amount_today = $inDB->rows_count('cms_greetings', "DATE(pubdate) BETWEEN DATE(NOW()) AND DATE_ADD(DATE(NOW()), INTERVAL 1 DAY) AND ip = '$user_ip'");
             
             if($cfg_com['amount']<=$amount_today){
-                echo '<input name="formexist" id="formexist" type="hidden" value="limit_today"><span id="limit" class="mod_greetings_errors">Исчерпан лимит добавления поздравлений на сегодня. Попробуйте позже.</span>';
+                echo '<input name="formexist" id="formexist" type="hidden" value="limit_today"><span id="limit" class="mod_greetings_errors">РСЃС‡РµСЂРїР°РЅ Р»РёРјРёС‚ РґРѕР±Р°РІР»РµРЅРёСЏ РїРѕР·РґСЂР°РІР»РµРЅРёР№ РЅР° СЃРµРіРѕРґРЅСЏ. РџРѕРїСЂРѕР±СѓР№С‚Рµ РїРѕР·Р¶Рµ.</span>';
                 return;
             }
         }
 
      
-    // Отдаем в шаблон
+    // РћС‚РґР°РµРј РІ С€Р°Р±Р»РѕРЅ
     ob_start();
     $smarty = $inCore->initSmarty('modules', 'mod_greetings_ajaxform.tpl');
     $smarty->assign('user_id', $user_id);

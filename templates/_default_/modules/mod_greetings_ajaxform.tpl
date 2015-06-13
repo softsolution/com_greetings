@@ -3,11 +3,11 @@
     <input name="formexist" id="formexist" type="hidden" value="exist">
     <input name="sid" type="hidden" value="{$sid}">
     <table id="mod_greetings">
-        <tr><td><span class="">Ваше имя</span></td></tr>
+        <tr><td><span class="">Р’Р°С€Рµ РёРјСЏ</span></td></tr>
         <tr><td>
                 <input type="text" maxlength="100" name="title" class="mod_greeting_title" value="{$item.title}" />
             </td></tr>
-        <tr><td><span class="">Текст поздравления</span></td></tr>
+        <tr><td><span class="">РўРµРєСЃС‚ РїРѕР·РґСЂР°РІР»РµРЅРёСЏ</span></td></tr>
         <tr><td><textarea name="description"  class="mod_greeting_textarea" id="mod_description">{$item.description}</textarea>
             </td></tr>
     </table>
@@ -19,20 +19,20 @@
     {/if}
 </form>    
 
-    {* Картинка пользователя *}
+    {* РљР°СЂС‚РёРЅРєР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ *}
     {if $cfg_com.user_image}
         <div id="user_image">
-            <div>Загрузить изображение</div>
+            <div>Р—Р°РіСЂСѓР·РёС‚СЊ РёР·РѕР±СЂР°Р¶РµРЅРёРµ</div>
             
             <input name="attach_img" type="file" id="attach_img" /><br />
-            <span id="mod_file_tipes">Картинка jpg, jpeg, png, gif, bmp</span>
+            <span id="mod_file_tipes">РљР°СЂС‚РёРЅРєР° jpg, jpeg, png, gif, bmp</span>
         </div>
         <div class=clear></div>
     {/if}
 
 
     <div class="mod_greetings_control">
-        <input type="button" onclick="sendGreetings()" name="gosend" value="Добавить" id="gosend" />
-        <input type="button" name="cancel" onclick="hideGreetingForm()" value="Отмена"/>
+        <input type="button" onclick="sendGreetings()" name="gosend" value="Р”РѕР±Р°РІРёС‚СЊ" id="gosend" />
+        <input type="button" name="cancel" onclick="hideGreetingForm()" value="РћС‚РјРµРЅР°"/>
     </div>
     

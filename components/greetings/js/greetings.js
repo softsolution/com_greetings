@@ -9,7 +9,7 @@ $("#description").focusin(function(){
 
 function sendGreetings(){
 if($('#description').attr('value').length < 10){
-alert('Âàøå ïîçäðàâëåíèå ñëèøêîì êîðîòêîå!');	
+alert('Ð’Ð°ÑˆÐµ Ð¿Ð¾Ð·Ð´Ñ€Ð°Ð²Ð»ÐµÐ½Ð¸Ðµ ÑÐ»Ð¸ÑˆÐºÐ¾Ð¼ ÐºÐ¾Ñ€Ð¾Ñ‚ÐºÐ¾Ðµ!');	
 } else {
 document.greetingsform.submit();	
 }	

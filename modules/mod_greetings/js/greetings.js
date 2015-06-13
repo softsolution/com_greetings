@@ -1,4 +1,4 @@
-﻿function greetingPage(page, module_id){
+function greetingPage(page, module_id){
 
     $.post('/modules/mod_greetings/ajax/latest.php', {'module_id': module_id, 'page':page}, function(data){
 		$('div#module_ajax_'+module_id).html(data);

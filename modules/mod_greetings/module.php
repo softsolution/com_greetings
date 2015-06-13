@@ -22,7 +22,7 @@ function mod_greetings($module_id){
         
         $is_greetings = false;
 		
-	// îïöèè ïîñòðàíè÷íîé ðàçáèâêè
+	// Ð¾Ð¿Ñ†Ð¸Ð¸ Ð¿Ð¾ÑÑ‚Ñ€Ð°Ð½Ð¸Ñ‡Ð½Ð¾Ð¹ Ñ€Ð°Ð·Ð±Ð¸Ð²ÐºÐ¸
 	$page    = 1;
 	$perpage = $cfg['greetingscount'];
 		
@@ -33,7 +33,7 @@ function mod_greetings($module_id){
 
         $result = $inDB->query($sql);
         
-        // Ñ÷èòàåì îáùåå êîëè÷åñòâî ïîçäðàâëåíèé åñëè îïöèÿ ïàãèíàöèÿ âêëþ÷åíà
+        // Ð¡Ñ‡Ð¸Ñ‚Ð°ÐµÐ¼ Ð¾Ð±Ñ‰ÐµÐµ ÐºÐ¾Ð»Ð¸Ñ‡ÐµÑÑ‚Ð²Ð¾ Ð¿Ð¾Ð·Ð´Ñ€Ð°Ð²Ð»ÐµÐ½Ð¸Ð¹ ÐµÑÐ»Ð¸ Ð¾Ð¿Ñ†Ð¸Ñ Ð¿Ð°Ð³Ð¸Ð½Ð°Ñ†Ð¸Ñ Ð²ÐºÐ»ÑŽÑ‡ÐµÐ½Ð°
 	if ($cfg['is_pag']) {
 			
             $sql_total = "SELECT 1 FROM cms_greetings WHERE published = 1";
@@ -52,8 +52,8 @@ function mod_greetings($module_id){
                 $greeting['pubdate']     = $inCore->dateFormat($greeting['pubdate'], true, false);
                 
                 $greeting['description'] = nl2br($greeting['description']);
-                if (strlen($greeting['description'])>$cfg['maxlen']) {
-                    $greeting['description'] = substr($greeting['description'], 0, $cfg['maxlen']). '...'; 
+                if (mb_strlen($greeting['description'])>$cfg['maxlen']) {
+                    $greeting['description'] = mb_substr($greeting['description'], 0, $cfg['maxlen']). '...'; 
                  }
                 
                 $greeting['file'] = existImage($greeting['file']);

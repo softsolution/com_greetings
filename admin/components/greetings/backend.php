@@ -4,51 +4,51 @@
 /*==================================================*/
 if(!defined('VALID_CMS_ADMIN')) { die('ACCESS DENIED'); }
 
-cpAddPathway('Поздравления', '?view=components&do=config&id='.$_REQUEST['id']);
-echo '<h3>Поздравления</h3>';
+cpAddPathway('РџРѕР·РґСЂР°РІР»РµРЅРёСЏ', '?view=components&do=config&id='.$_REQUEST['id']);
+echo '<h3>РџРѕР·РґСЂР°РІР»РµРЅРёСЏ</h3>';
 if (isset($_REQUEST['opt'])) { $opt = $_REQUEST['opt']; } else { $opt = 'list_items'; }
 
 $toolmenu = array();
 if ($opt != 'config') {
     $toolmenu[0]['icon'] = 'newstuff.gif';
-    $toolmenu[0]['title'] = 'Новое поздравление';
+    $toolmenu[0]['title'] = 'РќРѕРІРѕРµ РїРѕР·РґСЂР°РІР»РµРЅРёРµ';
     $toolmenu[0]['link'] = '?view=components&do=config&id=' . (int) $_REQUEST['id'] . '&opt=add_item';
 
     $toolmenu[2]['icon'] = 'liststuff.gif';
-    $toolmenu[2]['title'] = 'Все поздравления';
+    $toolmenu[2]['title'] = 'Р’СЃРµ РїРѕР·РґСЂР°РІР»РµРЅРёСЏ';
     $toolmenu[2]['link'] = '?view=components&do=config&id=' . (int) $_REQUEST['id'] . '&opt=list_items';
 
 
     if ($opt == 'list_items' || $opt == 'show_item' || $opt == 'hide_item') {
         $toolmenu[11]['icon'] = 'edit.gif';
-        $toolmenu[11]['title'] = 'Редактировать выбранные';
+        $toolmenu[11]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
         $toolmenu[11]['link'] = "javascript:checkSel('?view=components&do=config&id=" . (int) $_REQUEST['id'] . "&opt=edit_item&multiple=1');";
 
         $toolmenu[12]['icon'] = 'show.gif';
-        $toolmenu[12]['title'] = 'Публиковать выбранные';
+        $toolmenu[12]['title'] = 'РџСѓР±Р»РёРєРѕРІР°С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
         $toolmenu[12]['link'] = "javascript:checkSel('?view=components&do=config&id=" . (int) $_REQUEST['id'] . "&opt=show_item&multiple=1');";
 
         $toolmenu[13]['icon'] = 'hide.gif';
-        $toolmenu[13]['title'] = 'Скрыть выбранные';
+        $toolmenu[13]['title'] = 'РЎРєСЂС‹С‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
         $toolmenu[13]['link'] = "javascript:checkSel('?view=components&do=config&id=" . (int) $_REQUEST['id'] . "&opt=hide_item&multiple=1');";
 
         $toolmenu[14]['icon'] = 'delete.gif';
-        $toolmenu[14]['title'] = 'Удалить выбранные';
+        $toolmenu[14]['title'] = 'РЈРґР°Р»РёС‚СЊ РІС‹Р±СЂР°РЅРЅС‹Рµ';
         $toolmenu[14]['link'] = "javascript:checkSel('?view=components&do=config&id=" . (int) $_REQUEST['id'] . "&opt=delete_item&multiple=1');";
     }
     $toolmenu[15]['icon'] = 'config.gif';
-    $toolmenu[15]['title'] = 'Настройки';
+    $toolmenu[15]['title'] = 'РќР°СЃС‚СЂРѕР№РєРё';
     $toolmenu[15]['link'] = '?view=components&do=config&id=' . (int) $_REQUEST['id'] . '&opt=config';
 }
 if ($opt == 'config') {
     $toolmenu[16]['icon'] = 'save.gif';
-    $toolmenu[16]['title'] = 'Сохранить';
+    $toolmenu[16]['title'] = 'РЎРѕС…СЂР°РЅРёС‚СЊ';
     $toolmenu[16]['link'] = 'javascript:document.optform.submit();';
 }
 
 if ($opt != 'list_items') {
     $toolmenu[17]['icon'] = 'cancel.gif';
-    $toolmenu[17]['title'] = 'Отмена';
+    $toolmenu[17]['title'] = 'РћС‚РјРµРЅР°';
     $toolmenu[17]['link'] = '?view=components&do=config&id=' . (int) $_REQUEST['id'];
 }
 
@@ -88,15 +88,15 @@ if($opt=='saveconfig'){
     $cfg['thumbsqr']         = $inCore->request('thumbsqr', 'int');
     
     $inCore->saveComponentConfig('greetings', $cfg);
-    $msg = 'Настройки сохранены!';
+    $msg = 'РќР°СЃС‚СЂРѕР№РєРё СЃРѕС…СЂР°РЅРµРЅС‹!';
     $opt = 'config';
 }
 
 if (@$msg) { echo '<p class="success">'.$msg.'</p>'; }
 
 if ($opt=='config') { 
-    cpAddPathway('Поздравления', '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list');
-    cpAddPathway('Настройки', '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=config');
+    cpAddPathway('РџРѕР·РґСЂР°РІР»РµРЅРёСЏ', '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list');
+    cpAddPathway('РќР°СЃС‚СЂРѕР№РєРё', '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=config');
     
     $GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/includes/jquery/jquery.form.js"></script>';
     $GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/includes/jquery/tabs/jquery.ui.min.js"></script>';
@@ -106,15 +106,15 @@ if ($opt=='config') {
 <form action="index.php?view=components&amp;do=config&amp;id=<?php echo $_REQUEST['id'];?>" method="post" name="optform" target="_self" id="optform">
 <div id="config_tabs" style="margin-top:12px;">
     <ul id="tabs">
-        <li><a href="#basic"><span>Общие</span></a></li>
+        <li><a href="#basic"><span>РћР±С‰РёРµ</span></a></li>
     </ul>
     <div id="basic">
         <table width="661" border="0" cellpadding="10" cellspacing="0" class="proptable">
                <tr>
                     <td width="">
-                        <strong>Количество поздравлений: </strong><br/>
+                        <strong>РљРѕР»РёС‡РµСЃС‚РІРѕ РїРѕР·РґСЂР°РІР»РµРЅРёР№: </strong><br/>
                         <span class="hinttext">
-                            Количество поздравлений на странице
+                            РљРѕР»РёС‡РµСЃС‚РІРѕ РїРѕР·РґСЂР°РІР»РµРЅРёР№ РЅР° СЃС‚СЂР°РЅРёС†Рµ
                         </span>
                     </td>
                     <td valign="top">
@@ -123,9 +123,9 @@ if ($opt=='config') {
                 </tr>
                 <tr>
                     <td width="">
-                        <strong>Количество поздравлений от одного пользователя в сутки: </strong><br/>
+                        <strong>РљРѕР»РёС‡РµСЃС‚РІРѕ РїРѕР·РґСЂР°РІР»РµРЅРёР№ РѕС‚ РѕРґРЅРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РІ СЃСѓС‚РєРё: </strong><br/>
                         <span class="hinttext">
-                            Оставьте поле пустым для неограниченного количества
+                            РћСЃС‚Р°РІСЊС‚Рµ РїРѕР»Рµ РїСѓСЃС‚С‹Рј РґР»СЏ РЅРµРѕРіСЂР°РЅРёС‡РµРЅРЅРѕРіРѕ РєРѕР»РёС‡РµСЃС‚РІР°
                         </span>
                     </td>
                     <td valign="top">
@@ -134,51 +134,51 @@ if ($opt=='config') {
                 </tr>
                 <tr>
                     <td width="">
-                        <strong>Показывать ссылку на пользователя: </strong><br/>
+                        <strong>РџРѕРєР°Р·С‹РІР°С‚СЊ СЃСЃС‹Р»РєСѓ РЅР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ: </strong><br/>
                         <span class="hinttext">
-                            Подпись пользователя будет одновременно ссылкой на его профиль
+                            РџРѕРґРїРёСЃСЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ Р±СѓРґРµС‚ РѕРґРЅРѕРІСЂРµРјРµРЅРЅРѕ СЃСЃС‹Р»РєРѕР№ РЅР° РµРіРѕ РїСЂРѕС„РёР»СЊ
                         </span>
                     </td>
                     <td valign="top">
-                        <label><input name="show_userlink" type="radio" value="1"  <?php if (@$cfg['show_userlink']) { echo 'checked="checked"'; } ?> /> Да</label>
-                        <label><input name="show_userlink" type="radio" value="0"  <?php if (@!$cfg['show_userlink']) { echo 'checked="checked"'; } ?> /> Нет</label>
+                        <label><input name="show_userlink" type="radio" value="1"  <?php if (@$cfg['show_userlink']) { echo 'checked="checked"'; } ?> /> Р”Р°</label>
+                        <label><input name="show_userlink" type="radio" value="0"  <?php if (@!$cfg['show_userlink']) { echo 'checked="checked"'; } ?> /> РќРµС‚</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <strong>Принимать поздравления от незарегистрированных пользователей:</strong><br />
+                        <strong>РџСЂРёРЅРёРјР°С‚СЊ РїРѕР·РґСЂР°РІР»РµРЅРёСЏ РѕС‚ РЅРµР·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№:</strong><br />
                     </td>
                     <td valign="top">
-                        <label><input name="guest_enabled" type="radio" value="1"  <?php if (@$cfg['guest_enabled']) { echo 'checked="checked"'; } ?> /> Да</label>
-                        <label><input name="guest_enabled" type="radio" value="0"  <?php if (@!$cfg['guest_enabled']) { echo 'checked="checked"'; } ?> /> Нет</label>
+                        <label><input name="guest_enabled" type="radio" value="1"  <?php if (@$cfg['guest_enabled']) { echo 'checked="checked"'; } ?> /> Р”Р°</label>
+                        <label><input name="guest_enabled" type="radio" value="0"  <?php if (@!$cfg['guest_enabled']) { echo 'checked="checked"'; } ?> /> РќРµС‚</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <strong>Публиковать поздравления неавторизованных пользователей без модерации:</strong><br />
+                        <strong>РџСѓР±Р»РёРєРѕРІР°С‚СЊ РїРѕР·РґСЂР°РІР»РµРЅРёСЏ РЅРµР°РІС‚РѕСЂРёР·РѕРІР°РЅРЅС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№ Р±РµР· РјРѕРґРµСЂР°С†РёРё:</strong><br />
                     </td>
                     <td valign="top">
-                        <label><input name="guest_publish" type="radio" value="1"  <?php if (@$cfg['guest_publish']) { echo 'checked="checked"'; } ?> /> Да</label>
-                        <label><input name="guest_publish" type="radio" value="0"  <?php if (@!$cfg['guest_publish']) { echo 'checked="checked"'; } ?> /> Нет</label>
+                        <label><input name="guest_publish" type="radio" value="1"  <?php if (@$cfg['guest_publish']) { echo 'checked="checked"'; } ?> /> Р”Р°</label>
+                        <label><input name="guest_publish" type="radio" value="0"  <?php if (@!$cfg['guest_publish']) { echo 'checked="checked"'; } ?> /> РќРµС‚</label>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <strong>Предлагать пользователям выбирать изображение из коллекции сайта:</strong><br />
+                        <strong>РџСЂРµРґР»Р°РіР°С‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРј РІС‹Р±РёСЂР°С‚СЊ РёР·РѕР±СЂР°Р¶РµРЅРёРµ РёР· РєРѕР»Р»РµРєС†РёРё СЃР°Р№С‚Р°:</strong><br />
                         <span class="hinttext">
-                            Файлы коллекции сохранить в папку  /upload/greetings/collection/ на сервере.<br />
-                            default.jpg - изображение по умолчанию<br />Разрешенные типы файлов jpg, png, gif (расширение в нижнем регистре)
+                            Р¤Р°Р№Р»С‹ РєРѕР»Р»РµРєС†РёРё СЃРѕС…СЂР°РЅРёС‚СЊ РІ РїР°РїРєСѓ  /upload/greetings/collection/ РЅР° СЃРµСЂРІРµСЂРµ.<br />
+                            default.jpg - РёР·РѕР±СЂР°Р¶РµРЅРёРµ РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ<br />Р Р°Р·СЂРµС€РµРЅРЅС‹Рµ С‚РёРїС‹ С„Р°Р№Р»РѕРІ jpg, png, gif (СЂР°СЃС€РёСЂРµРЅРёРµ РІ РЅРёР¶РЅРµРј СЂРµРіРёСЃС‚СЂРµ)
                         </span>
                     </td>
                     <td valign="top">
-                        <label><input name="img_collection" type="radio" value="1"  <?php if (@$cfg['img_collection']) { echo 'checked="checked"'; } ?> /> Да</label>
-                        <label><input name="img_collection" type="radio" value="0"  <?php if (@!$cfg['img_collection']) { echo 'checked="checked"'; } ?> /> Нет</label>
+                        <label><input name="img_collection" type="radio" value="1"  <?php if (@$cfg['img_collection']) { echo 'checked="checked"'; } ?> /> Р”Р°</label>
+                        <label><input name="img_collection" type="radio" value="0"  <?php if (@!$cfg['img_collection']) { echo 'checked="checked"'; } ?> /> РќРµС‚</label>
                     </td>
                 </tr>
                 <tr>
                     <td width="">
-                        <strong>Ширина изображения в поздравлении: </strong><br/>
-                        <span class="hinttext">В пикселях</span>
+                        <strong>РЁРёСЂРёРЅР° РёР·РѕР±СЂР°Р¶РµРЅРёСЏ РІ РїРѕР·РґСЂР°РІР»РµРЅРёРё: </strong><br/>
+                        <span class="hinttext">Р’ РїРёРєСЃРµР»СЏС…</span>
                     </td>
                     <td valign="top">
                         <input name="img_width" type="text" id="img_width" value="<?php if (@$cfg['img_width']>0) echo @$cfg['img_width'];?>" style="width:50px"/> px
@@ -186,30 +186,30 @@ if ($opt=='config') {
                 </tr>
                 <tr>
                     <td width="">
-                        <strong>Разрешить загружать свои изображения: </strong><br/>
-                        <span class="hinttext">Пользователи cмогут загружать свои изображения к поздравлениям</span>
+                        <strong>Р Р°Р·СЂРµС€РёС‚СЊ Р·Р°РіСЂСѓР¶Р°С‚СЊ СЃРІРѕРё РёР·РѕР±СЂР°Р¶РµРЅРёСЏ: </strong><br/>
+                        <span class="hinttext">РџРѕР»СЊР·РѕРІР°С‚РµР»Рё cРјРѕРіСѓС‚ Р·Р°РіСЂСѓР¶Р°С‚СЊ СЃРІРѕРё РёР·РѕР±СЂР°Р¶РµРЅРёСЏ Рє РїРѕР·РґСЂР°РІР»РµРЅРёСЏРј</span>
                     </td>
                     <td valign="top">
-                        <label><input name="user_image" type="radio" value="1"  <?php if (@$cfg['user_image']) { echo 'checked="checked"'; } ?> /> Да</label>
-                        <label><input name="user_image" type="radio" value="0"  <?php if (@!$cfg['user_image']) { echo 'checked="checked"'; } ?> /> Нет</label>
+                        <label><input name="user_image" type="radio" value="1"  <?php if (@$cfg['user_image']) { echo 'checked="checked"'; } ?> /> Р”Р°</label>
+                        <label><input name="user_image" type="radio" value="0"  <?php if (@!$cfg['user_image']) { echo 'checked="checked"'; } ?> /> РќРµС‚</label>
                     </td>
                 </tr>
                 <tr>
                     <td width="">
-                        <strong>Разрешить гостям загружать изображения: </strong><br/>
-                        <span class="hinttext">Если этот и предыдущий пункт включены гости смогут загружать фото</span>
+                        <strong>Р Р°Р·СЂРµС€РёС‚СЊ РіРѕСЃС‚СЏРј Р·Р°РіСЂСѓР¶Р°С‚СЊ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ: </strong><br/>
+                        <span class="hinttext">Р•СЃР»Рё СЌС‚РѕС‚ Рё РїСЂРµРґС‹РґСѓС‰РёР№ РїСѓРЅРєС‚ РІРєР»СЋС‡РµРЅС‹ РіРѕСЃС‚Рё СЃРјРѕРіСѓС‚ Р·Р°РіСЂСѓР¶Р°С‚СЊ С„РѕС‚Рѕ</span>
                     </td>
                     <td valign="top">
-                        <label><input name="guest_image" type="radio" value="1"  <?php if (@$cfg['guest_image']) { echo 'checked="checked"'; } ?> /> Да</label>
-                        <label><input name="guest_image" type="radio" value="0"  <?php if (@!$cfg['guest_image']) { echo 'checked="checked"'; } ?> /> Нет</label>
+                        <label><input name="guest_image" type="radio" value="1"  <?php if (@$cfg['guest_image']) { echo 'checked="checked"'; } ?> /> Р”Р°</label>
+                        <label><input name="guest_image" type="radio" value="0"  <?php if (@!$cfg['guest_image']) { echo 'checked="checked"'; } ?> /> РќРµС‚</label>
                     </td>
                 </tr>
                 <tr>
-                    <td><strong>Квадратные изображения:</strong></td>
+                    <td><strong>РљРІР°РґСЂР°С‚РЅС‹Рµ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ:</strong></td>
                     <td valign="top">
                         <select name="thumbsqr" id="select" style="width:60px">
-                            <label><option value="1" <?php if (@$cfg['thumbsqr']=='1') { echo 'selected="selected"'; } ?>>Да</option></label>
-                            <label><option value="0" <?php if (@$cfg['thumbsqr']=='0') { echo 'selected="selected"'; } ?>>Нет</option></label>
+                            <label><option value="1" <?php if (@$cfg['thumbsqr']=='1') { echo 'selected="selected"'; } ?>>Р”Р°</option></label>
+                            <label><option value="0" <?php if (@$cfg['thumbsqr']=='0') { echo 'selected="selected"'; } ?>>РќРµС‚</option></label>
                     </select>
                     </td>
                 </tr>
@@ -220,8 +220,8 @@ if ($opt=='config') {
 
 <p>
     <input name="opt" type="hidden" value="saveconfig" />
-    <input name="save" type="submit" id="save" value="Сохранить" />
-    <input name="back" type="button" id="back" value="Отмена" onclick="window.location.href='?view=components&do=config&id=<?php echo (int)$_REQUEST['id']; ?>';"/>
+    <input name="save" type="submit" id="save" value="РЎРѕС…СЂР°РЅРёС‚СЊ" />
+    <input name="back" type="button" id="back" value="РћС‚РјРµРЅР°" onclick="window.location.href='?view=components&do=config&id=<?php echo (int)$_REQUEST['id']; ?>';"/>
 </p>
 </form>
 
@@ -256,10 +256,10 @@ if ($opt == 'hide_item') {
 }
 
 /* ==================================================================================================== */
-/* ======================== Добавляем и редактируем поздравление ====================================== */
+/* ======================== Р”РѕР±Р°РІР»СЏРµРј Рё СЂРµРґР°РєС‚РёСЂСѓРµРј РїРѕР·РґСЂР°РІР»РµРЅРёРµ ====================================== */
 /* ==================================================================================================== */
 
-//ДОБАВЛЯЕМ ПОЗДРАВЛЕНИЕ
+//Р”РћР‘РђР’Р›РЇР•Рњ РџРћР—Р”Р РђР’Р›Р•РќРР•
 if ($opt == 'submit_item'){
     
 $item = array();
@@ -308,7 +308,7 @@ if ($item['description']) {
         @unlink($uploadfile);
         }
 
-        //добавляем поздравление
+        //РґРѕР±Р°РІР»СЏРµРј РїРѕР·РґСЂР°РІР»РµРЅРёРµ
         $greeting_id = $model->addGreeting($item);
     
 }
@@ -316,7 +316,7 @@ if ($item['description']) {
 header('location:?view=components&do=config&opt=list_items&id='.(int)$_REQUEST['id']);
 }
 
-//РЕДАКТИРУЕМ ПОЗДРАВЛЕНИЕ ПОЗДРАВЛЕНИЕ
+//Р Р•Р”РђРљРўРР РЈР•Рњ РџРћР—Р”Р РђР’Р›Р•РќРР• РџРћР—Р”Р РђР’Р›Р•РќРР•
 if ($opt == 'update_item'){
     $item = array();
     $item['title']         = $_REQUEST['title'];
@@ -329,7 +329,7 @@ if ($opt == 'update_item'){
     
     if ($item['description']) {
 
-        //изображение пользователя
+        //РёР·РѕР±СЂР°Р¶РµРЅРёРµ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
         if ($_REQUEST['upload'] && isset($_FILES["picture"]["name"]) && @$_FILES["picture"]["name"] != '') {
 
             $inCore->includeGraphics();
@@ -377,13 +377,13 @@ if ($opt == 'update_item'){
         }
 
         if ($item['file'] != $greeting['file']) {
-            //удаляем старое изображение, если оно было загружено пользователем
+            //СѓРґР°Р»СЏРµРј СЃС‚Р°СЂРѕРµ РёР·РѕР±СЂР°Р¶РµРЅРёРµ, РµСЃР»Рё РѕРЅРѕ Р±С‹Р»Рѕ Р·Р°РіСЂСѓР¶РµРЅРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»РµРј
             if (preg_match('/^(\/upload\/greetings\/)?([\da-z]+)\.(jpg)$/', $greeting['file'])) {
                 @unlink(PATH . $greeting['file']);
             }
         }
 
-        //обновляем поздравление
+        //РѕР±РЅРѕРІР»СЏРµРј РїРѕР·РґСЂР°РІР»РµРЅРёРµ
         $greeting_id = $model->updateGreeting($item, $id);
     }
 
@@ -393,7 +393,7 @@ if ($opt == 'update_item'){
         header('location:?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=edit_item');
     }
 }
-//УДАЛЯЕМ ЗАПИСИ
+//РЈР”РђР›РЇР•Рњ Р—РђРџРРЎР
 if ($opt == 'delete_item') {
     if (!isset($_REQUEST['item'])) {
         if (isset($_REQUEST['item_id'])) {
@@ -405,18 +405,18 @@ if ($opt == 'delete_item') {
     header('location:?view=components&do=config&id=' . (int) $_REQUEST['id'] . '&opt=list_items');
 }
 
-//ВНЕШНЕЕ ПРЕДСТАВЛЕНИЕ
+//Р’РќР•РЁРќР•Р• РџР Р•Р”РЎРўРђР’Р›Р•РќРР•
 if ($opt == 'add_item' || $opt == 'edit_item') {
     if ($opt == 'add_item') {
-        echo '<h3>Добавить поздравление</h3>';
-        cpAddPathway('Добавить поздравление', '?view=components&do=config&id=' . (int) $_REQUEST['id'] . '&opt=add_item');
+        echo '<h3>Р”РѕР±Р°РІРёС‚СЊ РїРѕР·РґСЂР°РІР»РµРЅРёРµ</h3>';
+        cpAddPathway('Р”РѕР±Р°РІРёС‚СЊ РїРѕР·РґСЂР°РІР»РµРЅРёРµ', '?view=components&do=config&id=' . (int) $_REQUEST['id'] . '&opt=add_item');
         $mod['published'] = 1;
     } else {
         if (isset($_REQUEST['multiple'])) {
             if (isset($_REQUEST['item'])) {
                 $_SESSION['editlist'] = $_REQUEST['item'];
             } else {
-                echo '<p class="error">Нет выбранных объектов!</p>';
+                echo '<p class="error">РќРµС‚ РІС‹Р±СЂР°РЅРЅС‹С… РѕР±СЉРµРєС‚РѕРІ!</p>';
                 return;
             }
         }
@@ -428,7 +428,7 @@ if ($opt == 'add_item' || $opt == 'edit_item') {
             if (sizeof($_SESSION['editlist']) == 0) {
                 unset($_SESSION['editlist']);
             } else {
-                $ostatok = '(На очереди: ' . sizeof($_SESSION['editlist']) . ')';
+                $ostatok = '(РќР° РѕС‡РµСЂРµРґРё: ' . sizeof($_SESSION['editlist']) . ')';
             }
         } else {
             $id = (int) $_REQUEST['item_id'];
@@ -442,31 +442,31 @@ if ($opt == 'add_item' || $opt == 'edit_item') {
         
         if($mod['file']=='') { $mod['file']='/upload/greetings/collection/default.jpg'; }
 
-        echo '<h3>Редактировать поздравление</h3>';
-        cpAddPathway('Поздравления', '?view=components&do=config&id=' . (int) $_REQUEST['id'] . '&opt=list_items');
+        echo '<h3>Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ РїРѕР·РґСЂР°РІР»РµРЅРёРµ</h3>';
+        cpAddPathway('РџРѕР·РґСЂР°РІР»РµРЅРёСЏ', '?view=components&do=config&id=' . (int) $_REQUEST['id'] . '&opt=list_items');
     } ?>
 
 <form action="index.php?view=components&amp;do=config&amp;id=<?php echo (int)$_REQUEST['id'];?>" method="post" enctype="multipart/form-data" name="addform" id="addform">
 <table width="620" border="0" cellpadding="0" cellspacing="10" class="proptable">
 <tr>
-<td><strong>Публиковать поздравление?</strong></td>
-<td><label><input name="published" type="radio" value="1" checked="checked" <?php if (@$mod['published']) { echo 'checked="checked"'; } ?> />Да</label>
-<label><input name="published" type="radio" value="0"  <?php if (@!$mod['published']) { echo 'checked="checked"'; } ?> />Нет</label></td>
+<td><strong>РџСѓР±Р»РёРєРѕРІР°С‚СЊ РїРѕР·РґСЂР°РІР»РµРЅРёРµ?</strong></td>
+<td><label><input name="published" type="radio" value="1" checked="checked" <?php if (@$mod['published']) { echo 'checked="checked"'; } ?> />Р”Р°</label>
+<label><input name="published" type="radio" value="0"  <?php if (@!$mod['published']) { echo 'checked="checked"'; } ?> />РќРµС‚</label></td>
 </tr>
-<tr><td><strong>Ваше имя:</strong></td>
+<tr><td><strong>Р’Р°С€Рµ РёРјСЏ:</strong></td>
 <td><input name="title" type="text" size="52" id="title" value="<?php echo @$mod['title']; ?>" />
 </td>
 </tr>
-<tr><td colspan="2"><strong>Текст поздравления:</strong></td>
+<tr><td colspan="2"><strong>РўРµРєСЃС‚ РїРѕР·РґСЂР°РІР»РµРЅРёСЏ:</strong></td>
 <tr><td colspan="2"><textarea name="description"  id="description" rows="10" style="border:solid 1px gray;width:605px"><?php echo @$mod['description']; ?></textarea>
 </td></tr>
-<td valign="top"><strong>Изображение</strong></td>
+<td valign="top"><strong>РР·РѕР±СЂР°Р¶РµРЅРёРµ</strong></td>
 <td><div id="select_image"><img src="<?php echo @$mod['file']; ?>" id="choose_img" border="0" width="<?php echo $cfg['img_width']; ?>"></div>
 <input id="file" name="file" type="hidden" value="<?php echo @$mod['file']; ?>">
 </table>
     <?php if ($cfg['img_collection']) { ?>
         <div id="greetings_image">
-            <a id="collection_link" style="display:block;" href="javascript:showCollection()">Выбрать из коллекции сайта</a>
+            <a id="collection_link" style="display:block;" href="javascript:showCollection()">Р’С‹Р±СЂР°С‚СЊ РёР· РєРѕР»Р»РµРєС†РёРё СЃР°Р№С‚Р°</a>
             <?php 
                 $GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/components/greetings/js/jquery.ui.widget.min.js"></script>'; 
                 $GLOBALS['cp_page_head'][] = '<script type="text/javascript" src="/components/greetings/js/jquery.ui.mouse.min.js"></script>'; 
@@ -525,15 +525,15 @@ if ($opt == 'add_item' || $opt == 'edit_item') {
         
 
     <div id="user_image">
-        <div>Загрузить изображение</div>
+        <div>Р—Р°РіСЂСѓР·РёС‚СЊ РёР·РѕР±СЂР°Р¶РµРЅРёРµ</div>
         <input type="hidden" value="1" name="upload">
         <input name="picture" type="file" id="picture" size="33" /><br />
-        <span id="file_tipes">Картинка jpg, jpeg, png, gif, bmp</span>
+        <span id="file_tipes">РљР°СЂС‚РёРЅРєР° jpg, jpeg, png, gif, bmp</span>
     </div>
     <div class=clear></div>
 
-<p><label><input name="add_mod" type="submit" id="add_mod" <?php if ($opt == 'add_item') { echo 'value="Добавить поздравление"'; } else { echo 'value="Сохранить изменения"'; } ?> /></label>
-   <label><input name="back2" type="button" id="back2" value="Отмена" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/></label>
+<p><label><input name="add_mod" type="submit" id="add_mod" <?php if ($opt == 'add_item') { echo 'value="Р”РѕР±Р°РІРёС‚СЊ РїРѕР·РґСЂР°РІР»РµРЅРёРµ"'; } else { echo 'value="РЎРѕС…СЂР°РЅРёС‚СЊ РёР·РјРµРЅРµРЅРёСЏ"'; } ?> /></label>
+   <label><input name="back2" type="button" id="back2" value="РћС‚РјРµРЅР°" onclick="window.location.href='index.php?view=components&do=config&id=<?php echo $_REQUEST['id']; ?>';"/></label>
           <input name="opt" type="hidden" id="do" <?php if ($opt == 'add_item') { echo 'value="submit_item"'; } else { echo 'value="update_item"'; } ?> />
           <?php if ($opt == 'edit_item') { echo '<input name="item_id" type="hidden" value="' . $mod['id'] . '" />'; } ?>
         </p>
@@ -542,23 +542,23 @@ if ($opt == 'add_item' || $opt == 'edit_item') {
 <?php }
 
 /* ==================================================================================================== */
-/* ======================== Список поздравлений ======================================================= */
+/* ======================== РЎРїРёСЃРѕРє РїРѕР·РґСЂР°РІР»РµРЅРёР№ ======================================================= */
 /* ==================================================================================================== */
         
 if ($opt == 'list_items'){
-cpAddPathway('Поздравления', '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_items');
+cpAddPathway('РџРѕР·РґСЂР°РІР»РµРЅРёСЏ', '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=list_items');
 
 //TABLE COLUMNS
 $fields = array();
 
 $fields[0]['title'] = 'id';		$fields[0]['field'] = 'id';		$fields[0]['width'] = '30';
 
-$fields[1]['title'] = 'Подпись';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';
+$fields[1]['title'] = 'РџРѕРґРїРёСЃСЊ';	$fields[1]['field'] = 'title';		$fields[1]['width'] = '';
 $fields[1]['link'] = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=edit_item&item_id=%id%';
 $fields[1]['filter'] = 15;
 $fields[1]['maxlen'] = 80;
 
-$fields[2]['title'] = 'Текст поздравления';
+$fields[2]['title'] = 'РўРµРєСЃС‚ РїРѕР·РґСЂР°РІР»РµРЅРёСЏ';
 $fields[2]['field'] = 'description';
 $fields[2]['width'] = '';
 
@@ -566,18 +566,18 @@ $fields[3]['title'] = 'ip';
 $fields[3]['field'] = 'ip';
 $fields[3]['width'] = '100';
 
-$fields[4]['title'] = 'Показ';		$fields[4]['field'] = 'published';	$fields[4]['width'] = '50';
+$fields[4]['title'] = 'РџРѕРєР°Р·';		$fields[4]['field'] = 'published';	$fields[4]['width'] = '50';
 $fields[4]['do'] = 'opt';               $fields[4]['do_suffix'] = '_item';
 
 //ACTIONS
 $actions = array();
-$actions[0]['title'] = 'Редактировать';
+$actions[0]['title'] = 'Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ';
 $actions[0]['icon']  = 'edit.gif';
 $actions[0]['link']  = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=edit_item&item_id=%id%';
 
-$actions[1]['title'] = 'Удалить';
+$actions[1]['title'] = 'РЈРґР°Р»РёС‚СЊ';
 $actions[1]['icon']  = 'delete.gif';
-$actions[1]['confirm'] = 'Удалить поздравление?';
+$actions[1]['confirm'] = 'РЈРґР°Р»РёС‚СЊ РїРѕР·РґСЂР°РІР»РµРЅРёРµ?';
 $actions[1]['link']  = '?view=components&do=config&id='.(int)$_REQUEST['id'].'&opt=delete_item&item_id=%id%';
 
 //Print table

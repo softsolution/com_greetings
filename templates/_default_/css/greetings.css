@@ -3,7 +3,7 @@
    padding: 1em 0;
 }
 
-/* форма добавления поздравления */
+/* С„РѕСЂРјР° РґРѕР±Р°РІР»РµРЅРёСЏ РїРѕР·РґСЂР°РІР»РµРЅРёСЏ */
 .greeting_field {
     border: 1px solid #CCCCCC;
     padding:2px 2px;
@@ -32,7 +32,7 @@ width: 350px;
     border: 1px solid red !important;
 }
 
-/*Стиль кнопки*/
+/*РЎС‚РёР»СЊ РєРЅРѕРїРєРё*/
 .greetingbut {
 	-moz-box-shadow:inset 0px 1px 0px 0px #cae3fc;
 	-webkit-box-shadow:inset 0px 1px 0px 0px #cae3fc;
@@ -65,7 +65,7 @@ width: 350px;
 	position:relative;
 	top:1px;
 }
-/* </Стиль кнопки>*/
+/* </РЎС‚РёР»СЊ РєРЅРѕРїРєРё>*/
 
 .wrap_greeting_button {
     float: right;
@@ -127,7 +127,7 @@ width: 350px;
     height: 24px;
 }
 
-/* Оформление таблицы поздравлений */
+/* РћС„РѕСЂРјР»РµРЅРёРµ С‚Р°Р±Р»РёС†С‹ РїРѕР·РґСЂР°РІР»РµРЅРёР№ */
 table.list_greetings{
     margin-bottom: 15px;
     padding: 0;
@@ -137,7 +137,7 @@ table.list_greetings{
     padding: 8px 10px;
 }
 
-/*чередующийся фон для каждого поздравления*/
+/*С‡РµСЂРµРґСѓСЋС‰РёР№СЃСЏ С„РѕРЅ РґР»СЏ РєР°Р¶РґРѕРіРѕ РїРѕР·РґСЂР°РІР»РµРЅРёСЏ*/
 .bg_dark td {
     background-color: #f1f1f1;
 }
@@ -155,7 +155,7 @@ table.list_greetings{
 .greeting_date{font-size:12px;color: #888;}
 .greeting_mess{}
 
-/*подпись*/
+/*РїРѕРґРїРёСЃСЊ*/
 .greeting_author{
 text-align:left;/*text-align:right;*/
 font-weight:bold;
@@ -187,7 +187,7 @@ padding-top:15px;
 #file_tipes{font-size:11px;color:#666;}
 
 
-/* Классы модуля */
+/* РљР»Р°СЃСЃС‹ РјРѕРґСѓР»СЏ */
 
 .mod_greeting_date {
     color: #888888;

@@ -1,52 +1,38 @@
 <?php
 
-    header('Content-Type: text/html; charset=windows-1251');
-    session_start();
+/*==================================================*/
+/*            created by soft-solution.ru           */
+/*==================================================*/
 
-    define("VALID_CMS", 1);
-    define('PATH', $_SERVER['DOCUMENT_ROOT']);
-
-    include(PATH.'/core/cms.php');
-
-    $inCore = cmsCore::getInstance();
-
-    define('HOST', 'http://' . $inCore->getHost());
-
-    $inCore->loadClass('config');       //конфигурация
-    $inCore->loadClass('db');           //база данных
-    $inCore->loadClass('user');		//юзер
-
-    $inUser = cmsUser::getInstance();
-    $inDB  = cmsDatabase::getInstance();
+	define('PATH', $_SERVER['DOCUMENT_ROOT']);
+	include(PATH.'/core/ajax/ajax_core.php');
 
     //LOAD CURRENT CONFIG
     $cfg = $inCore->loadComponentConfig('greetings');
     
 //CONFIG DEFAULTS FROM COMPONENT
-if (!isset($cfg['amount'])) { $cfg['amount'] = 5;}//количество сообщений от одного пользователя в сутки
-if (!isset($cfg['guest_enabled'])) { $cfg['guest_enabled'] = 1; }//принимать ли поздравления от незарегистрированных пользователей
-if (!isset($cfg['img_width'])) { $cfg['img_width'] = 150; }//ширина картинки
-if (!isset($cfg['user_image'])) { $cfg['user_image'] = 0; }//разрешить пользователям загружать свои изображения
-if (!isset($cfg['thumbsqr'])) { $cfg['thumbsqr'] = 1;}//квадратные изображения
-if (!isset($cfg['guest_image'])) { $cfg['guest_image'] = 0; }//могут ли гости добавлять картинки
-
-$inUser->update();
+if (!isset($cfg['amount'])) { $cfg['amount'] = 5;}//РєРѕР»РёС‡РµСЃС‚РІРѕ СЃРѕРѕР±С‰РµРЅРёР№ РѕС‚ РѕРґРЅРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РІ СЃСѓС‚РєРё
+if (!isset($cfg['guest_enabled'])) { $cfg['guest_enabled'] = 1; }//РїСЂРёРЅРёРјР°С‚СЊ Р»Рё РїРѕР·РґСЂР°РІР»РµРЅРёСЏ РѕС‚ РЅРµР·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№
+if (!isset($cfg['img_width'])) { $cfg['img_width'] = 150; }//С€РёСЂРёРЅР° РєР°СЂС‚РёРЅРєРё
+if (!isset($cfg['user_image'])) { $cfg['user_image'] = 0; }//СЂР°Р·СЂРµС€РёС‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏРј Р·Р°РіСЂСѓР¶Р°С‚СЊ СЃРІРѕРё РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
+if (!isset($cfg['thumbsqr'])) { $cfg['thumbsqr'] = 1;}//РєРІР°РґСЂР°С‚РЅС‹Рµ РёР·РѕР±СЂР°Р¶РµРЅРёСЏ
+if (!isset($cfg['guest_image'])) { $cfg['guest_image'] = 0; }//РјРѕРіСѓС‚ Р»Рё РіРѕСЃС‚Рё РґРѕР±Р°РІР»СЏС‚СЊ РєР°СЂС‚РёРЅРєРё
 
 $user_id   = $inUser->id;
 $is_admin  = $inCore->userIsAdmin($inUser->id);
-// пользователь не авторизован
+// РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ Р°РІС‚РѕСЂРёР·РѕРІР°РЅ
 if(!$user_id && !$cfg['guest_image'] && !$cfg['guest_enabled'] && !$cfg['user_image']){
         echo "{";
-        echo "error: 'Загрузка файлов только для зарегистрированных!',\n";
+        echo "error: 'Р—Р°РіСЂСѓР·РєР° С„Р°Р№Р»РѕРІ С‚РѕР»СЊРєРѕ РґР»СЏ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅРЅС‹С…!',\n";
         echo "msg: ''\n";
         echo "}";
         die();
 }
 
-// если пользователь пользователь не авторизован
+// РµСЃР»Рё РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅРµ Р°РІС‚РѕСЂРёР·РѕРІР°РЅ
 if($user_id && !$cfg['user_image'] && !$cfg['user_image']){
         echo "{";
-        echo "error: 'Загрузка файлов не доступна!',\n";
+        echo "error: 'Р—Р°РіСЂСѓР·РєР° С„Р°Р№Р»РѕРІ РЅРµ РґРѕСЃС‚СѓРїРЅР°!',\n";
         echo "msg: ''\n";
         echo "}";
         die();
@@ -57,7 +43,7 @@ if($user_id && !$cfg['user_image'] && !$cfg['user_image']){
 
         if ($cfg['user_image']){
             
-            //считаем сколько объявлений пользователь добавил сегодня
+            //СЃС‡РёС‚Р°РµРј СЃРєРѕР»СЊРєРѕ РѕР±СЉСЏРІР»РµРЅРёР№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РґРѕР±Р°РІРёР» СЃРµРіРѕРґРЅСЏ
             if ($cfg['amount']!=0 && !$is_admin) {
                 $user_ip = $inUser->ip;
                 $amount_today = $inDB->rows_count('cms_greetings', "DATE(pubdate) BETWEEN DATE(NOW()) AND DATE_ADD(DATE(NOW()), INTERVAL 1 DAY) AND ip = '$user_ip'");
@@ -65,7 +51,7 @@ if($user_id && !$cfg['user_image'] && !$cfg['user_image']){
                 if($cfg['amount']<=$amount_today){
                     
                     echo "{";
-                    echo		"error: 'Ичерпан лимит добавления поздравлений на сегодня!',\n";
+                    echo		"error: 'РС‡РµСЂРїР°РЅ Р»РёРјРёС‚ РґРѕР±Р°РІР»РµРЅРёСЏ РїРѕР·РґСЂР°РІР»РµРЅРёР№ РЅР° СЃРµРіРѕРґРЅСЏ!',\n";
                     echo		"msg: ''\n";
                     echo "}";	
                     die();
@@ -80,15 +66,15 @@ if($user_id && !$cfg['user_image'] && !$cfg['user_image']){
 
             if ($ext == 'jpg' || $ext == 'jpeg' || $ext == 'gif' || $ext == 'bmp' || $ext == 'png'){
 
-            // оригинальный файл
+            // РѕСЂРёРіРёРЅР°Р»СЊРЅС‹Р№ С„Р°Р№Р»
             $filename       = md5($realfile.time()).'-orig.'.$ext;
             $uploadfile     = $uploaddir . $filename;
             
-            // сконверченый файл
+            // СЃРєРѕРЅРІРµСЂС‡РµРЅС‹Р№ С„Р°Р№Р»
             $filename_jpg   = md5($realfile.time()).'.jpg';
             $uploadphoto    = $uploaddir . $filename_jpg;
             
-            // url файла
+            // url С„Р°Р№Р»Р°
             $fileurl = '/upload/greetings/'.$filename_jpg;
 
             if ($inCore->moveUploadedFile($_FILES['attach_img']['tmp_name'], $uploadfile, $_FILES['attach_img']['error'])) {
@@ -109,14 +95,14 @@ if($user_id && !$cfg['user_image'] && !$cfg['user_image']){
                                     echo "}";
                             } else { 
                                     echo "{";
-                                    echo	"error: 'Файл не загружен! Проверьте его тип, размер и права на запись в папку /upload/greetings.',\n";
+                                    echo	"error: 'Р¤Р°Р№Р» РЅРµ Р·Р°РіСЂСѓР¶РµРЅ! РџСЂРѕРІРµСЂСЊС‚Рµ РµРіРѕ С‚РёРї, СЂР°Р·РјРµСЂ Рё РїСЂР°РІР° РЅР° Р·Р°РїРёСЃСЊ РІ РїР°РїРєСѓ /upload/greetings.',\n";
                                     echo	"msg: ''\n";
                                     echo "}";
                             } 
 
                     } else { 
                                     echo "{";
-                                    echo	"error: 'Неверный тип файла! Допустимые типы: jpg, jpeg, gif, png, bmp.',\n";
+                                    echo	"error: 'РќРµРІРµСЂРЅС‹Р№ С‚РёРї С„Р°Р№Р»Р°! Р”РѕРїСѓСЃС‚РёРјС‹Рµ С‚РёРїС‹: jpg, jpeg, gif, png, bmp.',\n";
                                     echo	"msg: ''\n";
                                     echo "}";
                     } //filetype
@@ -125,13 +111,13 @@ if($user_id && !$cfg['user_image'] && !$cfg['user_image']){
     } //img is on
 		else {
 			echo "{";
-			echo		"error: 'Загрузка файлов запрещена!',\n";
+			echo		"error: 'Р—Р°РіСЂСѓР·РєР° С„Р°Р№Р»РѕРІ Р·Р°РїСЂРµС‰РµРЅР°!',\n";
 			echo		"msg: ''\n";
 			echo "}";	
 		}
 	} else { 	
 			echo "{";
-			echo		"error: 'Файл не загружен!',\n";
+			echo		"error: 'Р¤Р°Р№Р» РЅРµ Р·Р°РіСЂСѓР¶РµРЅ!',\n";
 			echo		"msg: ''\n";
 			echo "}";
 	 }

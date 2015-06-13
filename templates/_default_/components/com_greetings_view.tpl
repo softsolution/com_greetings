@@ -1,4 +1,4 @@
-{* Файл стилей, при использовании не стандартного шаблона измените путь к этому файлу *}
+{* Р¤Р°Р№Р» СЃС‚РёР»РµР№, РїСЂРё РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРё РЅРµ СЃС‚Р°РЅРґР°СЂС‚РЅРѕРіРѕ С€Р°Р±Р»РѕРЅР° РёР·РјРµРЅРёС‚Рµ РїСѓС‚СЊ Рє СЌС‚РѕРјСѓ С„Р°Р№Р»Сѓ *}
 {add_css file='templates/_default_/css/greetings.css'}
 
 <div class="wrap_greeting_button">
@@ -46,7 +46,7 @@
                 <div class="greetings_remote">
                     <span class="editlinks">
                     <a title="{$LANG.EDIT}" href="/greetings/edit{$greeting.id}.html">{$LANG.EDIT}</a>
-                    | <a title="{$LANG.DELETE}" title="Удалить резюме" onclick="jsmsg('{$LANG.DELETE_GREETINGS}?', '/greetings/delete{$greeting.id}.html')" href="#">{$LANG.DELETE}</a>
+                    | <a title="{$LANG.DELETE}" title="РЈРґР°Р»РёС‚СЊ СЂРµР·СЋРјРµ" onclick="jsmsg('{$LANG.DELETE_GREETINGS}?', '/greetings/delete{$greeting.id}.html')" href="#">{$LANG.DELETE}</a>
                     </span>
                 </div>
                 {/if}

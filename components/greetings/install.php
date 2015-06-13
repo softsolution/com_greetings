@@ -3,20 +3,20 @@
 /*            created by soft-solution.ru           */
 /*==================================================*/
 function info_component_greetings() {
-    $_component['title'] = 'Поздравления';                                          //название 
-    $_component['description'] = 'Компонент Поздравления для InstantCMS';           //описание
-    $_component['link'] = 'greetings';                                               //ссылка (идентификатор)
-    $_component['author'] = 'soft-solution.ru';                                     //автор
-    $_component['internal'] = '0';                                                  //внутренний (только для админки)? 1-Да, 0-Нет
-    $_component['version'] = '1.0';                                                 //текущая версия
+    $_component['title'] = 'РџРѕР·РґСЂР°РІР»РµРЅРёСЏ';                                          //РЅР°Р·РІР°РЅРёРµ 
+    $_component['description'] = 'РљРѕРјРїРѕРЅРµРЅС‚ РџРѕР·РґСЂР°РІР»РµРЅРёСЏ РґР»СЏ InstantCMS';           //РѕРїРёСЃР°РЅРёРµ
+    $_component['link'] = 'greetings';                                               //СЃСЃС‹Р»РєР° (РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ)
+    $_component['author'] = 'soft-solution.ru';                                     //Р°РІС‚РѕСЂ
+    $_component['internal'] = '0';                                                  //РІРЅСѓС‚СЂРµРЅРЅРёР№ (С‚РѕР»СЊРєРѕ РґР»СЏ Р°РґРјРёРЅРєРё)? 1-Р”Р°, 0-РќРµС‚
+    $_component['version'] = '1.0';                                                 //С‚РµРєСѓС‰Р°СЏ РІРµСЂСЃРёСЏ
 
     return $_component;
 }
 
 function install_component_greetings() {
 
-    $inCore = cmsCore::getInstance();                                //подключаем ядро
-    $inDB = cmsDatabase::getInstance();                              //подключаем базу данных
+    $inCore = cmsCore::getInstance();                                //РїРѕРґРєР»СЋС‡Р°РµРј СЏРґСЂРѕ
+    $inDB = cmsDatabase::getInstance();                              //РїРѕРґРєР»СЋС‡Р°РµРј Р±Р°Р·Сѓ РґР°РЅРЅС‹С…
     $inConf = cmsConfig::getInstance();
 
     include($_SERVER['DOCUMENT_ROOT'] . '/includes/dbimport.inc.php');

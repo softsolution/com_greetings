@@ -3,46 +3,22 @@
 /*            created by soft-solution.ru           */
 /*==================================================*/
 
-    if($_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') { die(); }
-	header('Content-Type: text/html; charset=windows-1251'); 
-	session_start();
+	define('PATH', $_SERVER['DOCUMENT_ROOT']);
+	include(PATH.'/core/ajax/ajax_core.php');
 
     if (!isset($_REQUEST['module_id'])) { die(2); }
     if (!isset($_REQUEST['page'])) { die(4); }
 
-    define("VALID_CMS", 1);
-    define('PATH', $_SERVER['DOCUMENT_ROOT']);
-
-    // Грузим ядро и классы
-    include(PATH.'/core/cms.php');
-    
-    // Грузим конфиг
-    include(PATH.'/includes/config.inc.php');
-    $inCore = cmsCore::getInstance();
-
-    define('HOST', 'http://' . $inCore->getHost());
-    
-    $inCore->loadClass('config'); 
-    $inCore->loadClass('db'); 
-    $inCore->loadClass('user');
-    $inCore->loadClass('page');
-    $inDB   = cmsDatabase::getInstance();
-    
-    $inCore->loadLanguage('lang');
-
-    // Грузим шаблонизатор
+    // Р“СЂСѓР·РёРј С€Р°Р±Р»РѕРЅРёР·Р°С‚РѕСЂ
     $smarty = $inCore->initSmarty();
 
-    // Входные данные
-    $page	= $inCore->request('page', 'int', 1);	
+    // Р’С…РѕРґРЅС‹Рµ РґР°РЅРЅС‹Рµ
+    $page		= $inCore->request('page', 'int', 1);	
     $module_id	= $inCore->request('module_id', 'int', '');
 
-    // Грузим конфиг модуля
+    // Р“СЂСѓР·РёРј РєРѕРЅС„РёРі РјРѕРґСѓР»СЏ
     $cfg = $inCore->loadModuleConfig($module_id);
 
-    // Если пагинация отключена, выходим
-    //if (!$cfg['is_pag']) { die(); }
-    
     if (!isset($cfg['greetingscount'])) { $cfg['greetingscount']= 5; }
     if (!isset($cfg['showimages'])) { $cfg['showimages']= 1; }
     if (!isset($cfg['imagewidth'])) { $cfg['imagewidth']= 90; }
@@ -86,7 +62,7 @@
         }
     }
     
-    // Отдаем в шаблон
+    // РћС‚РґР°РµРј РІ С€Р°Р±Р»РѕРЅ
     ob_start();
     $smarty = $inCore->initSmarty('modules', 'mod_greetings.tpl');			
     $smarty->assign('greetings', $greetings);
