@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<backend>    
+    <module>
+        <id>mod_greetings</id>
+        <title>Последние поздравления</title>
+    </module>
+    <params>
+        <param type="number" name="greetingscount" title="Количество поздравлений" units="шт." default="5" />
+        <param type="flag" name="showimages" title="Показывать картинки" default="on" />
+        <param type="number" name="imagewidth" title="Ширина картинки" default="90" units="px." />
+        <param type="flag" name="addgreetings" title="Разрешить добавление позравлений в модуле" default="on" />
+        <param type="flag" name="showlink" title="Показывать ссылку на профиль пользователя" default="off" />
+        <param type="number" name="maxlen" title="Обрезать поздравления длиннее" units="символов" default="100" />
+	<param type="flag" name="is_pag" title="Использовать пагинацию" default="on" />
+    </params>
+</backend>

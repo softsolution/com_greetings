@@ -1,0 +1,220 @@
+#greetings_body {
+   width: 100%;
+   padding: 1em 0;
+}
+
+/* форма добавления поздравления */
+.greeting_field {
+    border: 1px solid #CCCCCC;
+    padding:2px 2px;
+}
+.fullfield {
+width: 350px;
+}
+.greeting_select{
+    border: 1px solid #CCCCCC;
+    padding: 1px 0;
+}
+#add_table_greeting{width:500px;}
+#add_table_greeting td {
+    padding: 0 0 5px;
+}
+
+.name_field_greeting{}
+#add_addr_link{padding: 5px 0 15px 0;}
+
+.novalid {
+    color: red;
+    font-size: 11px;
+}
+
+.novalidfield {
+    border: 1px solid red !important;
+}
+
+/*Стиль кнопки*/
+.greetingbut {
+	-moz-box-shadow:inset 0px 1px 0px 0px #cae3fc;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #cae3fc;
+	box-shadow:inset 0px 1px 0px 0px #cae3fc;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #79bbff), color-stop(1, #4197ee) );
+	background:-moz-linear-gradient( center top, #79bbff 5%, #4197ee 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#79bbff', endColorstr='#4197ee');
+	background-color:#79bbff;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+	border:1px solid #469df5;
+	display:inline-block;
+	color:#ffffff;
+	font-family:arial;
+	font-size:12px;
+	font-weight:normal;
+	padding:3px 24px;
+	text-decoration:none;
+	text-shadow:1px 1px 0px #287ace;
+}
+.greetingbut:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #4197ee), color-stop(1, #79bbff) );
+	background:-moz-linear-gradient( center top, #4197ee 5%, #79bbff 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#4197ee', endColorstr='#79bbff');
+	background-color:#4197ee;
+        color:#ffffff;
+}
+.greetingbut:active {
+	position:relative;
+	top:1px;
+}
+/* </Стиль кнопки>*/
+
+.wrap_greeting_button {
+    float: right;
+    margin-top: 6px;
+}
+
+.tabBar {
+    background-color: #FFFFFF;
+    clear: both;
+    height: 30px;
+    padding-bottom: 4px;
+    width: 100%;
+    border-bottom: 1px solid #999999;
+}
+.tabs {
+    background-color: #FFFFFF;
+    display: block;
+    float: left;
+    font-weight: bold;
+    height: 20px;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.tabs a {
+    background: none repeat scroll 0 0 #EEEEEE;
+    border-bottom: 1px solid #CCCCCC;
+    border-right: 1px solid #CCCCCC;
+    color: #888A85;
+    display: block;
+    float: left;
+    height: 20px;
+    line-height: 22px;
+    margin: 5px 4px 0 0;
+    padding: 0 11px;
+    text-decoration: none;
+}
+
+.tabs a.selected, .tabs a:hover {
+    background: none repeat scroll 0 0 #FFFFFF;
+    color: #A40000;
+}
+
+.tabBar .tabs a {
+    background-color: #FFFFFF;
+    border-color: #FFFFFF;
+    border-style: solid;
+    border-width: 1px;
+    color: #545454;
+    height: 23px;
+    margin: 9px 3px 0 0;
+}
+
+.tabBar .tabs a.selected, .tabBar .tabs a:hover {
+    border-color: #999999 #999999 #FFFFFF;
+    border-style: solid;
+    border-width: 1px;
+    color: #000000;
+    height: 24px;
+}
+
+/* Оформление таблицы поздравлений */
+table.list_greetings{
+    margin-bottom: 15px;
+    padding: 0;
+    width: 100%;
+}
+.list_greetings td {
+    padding: 8px 10px;
+}
+
+/*чередующийся фон для каждого поздравления*/
+.bg_dark td {
+    background-color: #f1f1f1;
+}
+.bg_light td {
+    background-color: #fff;
+}
+
+#greeting_image{vertical-align: top; width:90px;}
+#greeting_text{vertical-align: top;}
+
+
+.text_name {
+    font-size: 1.27em;
+}
+.greeting_date{font-size:12px;color: #888;}
+.greeting_mess{}
+
+/*подпись*/
+.greeting_author{
+text-align:left;/*text-align:right;*/
+font-weight:bold;
+font-style:italic;
+padding-left:100px;
+padding-top:15px;
+}
+
+.gray_light {color: #888;}
+.g_item_edit{}
+.g_item_delete{}
+.greetings_remote {
+    border: 1px solid #999;
+    border-radius: 8px 8px 8px 8px;
+    display: inline-block;
+    font-size: 12px;
+    padding: 5px 10px;
+}
+.greetings_remote .editlinks a {
+    color:#999;
+}
+.greetings_remote .editlinks a:hover {
+    color: #333;
+}
+#collection_link{margin:0 0 10px 0}
+#greetings_image{margin:0 0 10px 0}
+#select_image{margin:0 0 10px 0}
+#user_image{margin:0 0 10px 0}
+#file_tipes{font-size:11px;color:#666;}
+
+
+/* Классы модуля */
+
+.mod_greeting_date {
+    color: #888888;
+    font-size: 12px;
+}
+.mod_greeting_mess{}
+.mod_greeting_author {
+    font-weight: bold;
+    text-align: right;
+}
+.mod_greetings_all {
+    background: url("../images/icons/comments.png") no-repeat scroll 0 0 transparent;
+    color: #333333;
+    padding: 1px 1px 1px 20px;
+}
+
+.mod_greetings_addlink{padding:5px 0;display:block;text-align: right;}
+
+#greeting_preloader {
+    background: url("/modules/mod_greetings/images/loader.gif") no-repeat scroll 0 0 transparent;
+    padding-left: 25px;
+    height: 20px;
+}
+#mod_greetings_add{}
+#add_greetingform{margin: 0 0 10px 0;}
+.mod_greeting_textarea{width:260px;height:80px;}
+.mod_greeting_title{width:260px;}
+#mod_file_tipes{font-size:11px;color:#666;}
+.mod_greetings_errors{font-size:11px;color:red;}
+.mod_greetings_success{font-size:11px;color:green;}
