@@ -1,25 +1,21 @@
 <?php
-/*==================================================*/
-/*            created by soft-solution.ru           */
-/*==================================================*/
-if (!defined('VALID_CMS')) {
-    die('ACCESS DENIED');
-}
+/* ****************************************************************************************** */
+/* created by soft-solution.ru                                                                */
+/* frontend.php of component greetings for InstantCMS 1.10.2                                  */
+/* ****************************************************************************************** */
+if (!defined('VALID_CMS')) { die('ACCESS DENIED'); }
 
 function greetings() {
+    
     global $_LANG;
     $inCore = cmsCore::getInstance();
+    $inConf     = cmsConfig::getInstance();
     $inPage = cmsPage::getInstance();
     $inDB   = cmsDatabase::getInstance();
     $inUser = cmsUser::getInstance();
 
     $cfg = $inCore->loadComponentConfig('greetings');
 
-    // Проверяем включен ли компонент
-    if (!$cfg['component_enabled']) {
-        cmsCore::error404();
-    }
-    
     $inCore->loadModel('greetings');
     $model = new cms_model_greetings();
     
@@ -29,99 +25,60 @@ function greetings() {
     $inCore->loadLanguage('components/greetings');
 
     $user_id   = $inUser->id;
-
     $is_admin  = $inCore->userIsAdmin($inUser->id);
  
-    $id        = $inCore->request('id', 'int', 0);
-    $do        = $inCore->request('do', 'str', 'view');
-    $target    = $inCore->request('target', 'str', 'all');
-    $page      = $inCore->request('page', 'int', 1);
+    $do        = cmsCore::request('do', 'str', 'view');
+    $page      = cmsCore::request('page', 'int', 1);
+    
     $perpage   = $cfg['perpage'] ? $cfg['perpage'] : 15;
     $cfg['amount'] = $cfg['amount'] ? $cfg['amount']  : 0;
     $cfg['img_width'] = $cfg['img_width'] ? $cfg['img_width']  : 150;
+    
+    $pagetitle = $inCore->menuTitle();
+    $pagetitle = $pagetitle ? $pagetitle : $_LANG['GREETINGS'];
+
+    $inPage->setTitle($pagetitle);
+    $inPage->addPathway($pagetitle, '/greetings');
+    $inPage->addHeadJS('components/greetings/js/greetings.js');
+    $inPage->addHeadCSS('templates/'.$inConf->template.'/css/greetings.css');
 
 /* ==================================================================================================== */
 /* ========================== ЛЕНТА ПОЗДРАВЛЕНИЙ ====================================================== */
 /* ==================================================================================================== */
 
     if ($do == 'view') {
-
-        $sql = "SELECT g.*,
-                    u.nickname as author, u.login
-		FROM cms_greetings g
-		LEFT JOIN cms_users u ON u.id = g.user_id
-                WHERE g.published = 1";
         
-        if($target=='my' && $user_id) {
-            $sql .=" AND g.user_id = $user_id";
-        }
+        $is_moder = $inUser->is_admin;
+        $total = $model->getItemsCount($is_moder);
+
+        if (!$orderby) { $orderby = 'pubdate'; }
+        if (!$orderto) { $orderto = 'DESC'; }
+        $inDB->orderBy($orderby, $orderto);
+        $inDB->limitPage($page, $perpage);
         
-        $sql .= " ORDER BY g.pubdate DESC 
-                LIMIT ".($page - 1)*$perpage.", " .$perpage;
+        $items = $model->getItems($is_moder);
+        if(!$items && $page > 1){ cmsCore::error404(); }
 
-        $result = $inDB->query($sql);
-
-        //для корректной пагинации считаем количество отдельно
-        $sql2 = "SELECT 1 FROM cms_greetings g";
-        if ($target=='my') { $where .= " AND g.user_id = $user_id"; } 
-        if (!$is_admin)    { $where .= " AND g.published = 1"; }
-        if ($where) $sql2 .= ' WHERE g.id > 0 '.$where;
-
-        $result_total = $inDB->query($sql2);
-        $records = $inDB->num_rows($result_total);
-
-
-        if ($inDB->num_rows($result)) {
-            $greetings = array();
-            while ($greeting = $inDB->fetch_assoc($result)) {
-                $greeting['pubdate']     = $inCore->dateFormat($greeting['pubdate'], true, false);//дата
-                $greeting['author']      = cmsUser::getProfileLink($greeting['login'], $greeting['author']);
-                $greeting['description'] = nl2br($greeting['description']);
-                $greeting['file'] = existImage($greeting['file']);
-                $greetings[] = $greeting;
-            }
-            $is_greeting = true;
-        } else {
-            $is_greeting = false;
-        }
-
-        if($target=='my') {
-            $filter_target = $target.'/';
-        } else {
-            $filter_target = '';
-        }
-        
-        $pagebar = cmsPage::getPagebar($records, $page, $perpage, '/greetings/'.$filter_target.'page-%page%');
+        $pagebar = cmsPage::getPagebar($total, $page, $perpage, '/greetings/page-%page%');
 
         $smarty = $inCore->initSmarty('components', 'com_greetings_view.tpl');
-        
         $smarty->assign('is_admin', $is_admin);
         $smarty->assign('user_id', $user_id);
-        $smarty->assign('target', $target);
         $smarty->assign('cfg', $cfg);
-        $smarty->assign('greetings', $greetings);
+        $smarty->assign('items', $items);
         $smarty->assign('pagebar', $pagebar);
-        $smarty->assign('is_greeting', $is_greeting);
         $smarty->display('com_greetings_view.tpl');
     }
 
-/* ==================================================================================================== */
-/* ========================== ПРОСМОТР ПОЗДРАВЛЕНИЯ =================================================== */
-/* ==================================================================================================== */
-//ПОКА НЕ ИСПОЛЬЗУЕТСЯ
-//    if ($do == 'read') {
-//    }
-    
 /* ==================================================================================================== */
 /* ========================== ДОБАВЛЯЕМ ПОЗДРАВЛЕНИЕ ================================================== */
 /* ==================================================================================================== */
     
     if ($do == 'add') {
 
-        //если не авторизован, перебрасываем на ссылку для авторизации
         if (!$inUser->id && !$cfg['guest_enabled']){ cmsUser::goToLogin(); }
         
-         //если установлено ограничение по добавлению поздравлений
+        //если установлено ограничение по добавлению поздравлений
         //от одного пользователя 
         //считаем сколько объявлений пользователь добавил сегодня
         if ($cfg['amount']!=0 && !$is_admin){
@@ -134,138 +91,122 @@ function greetings() {
             }
         }
         
-        $inPage->setTitle($_LANG['ADD_GREETINGS']);
-	$inPage->addPathway($_LANG['ADD_GREETINGS']);
-	
-	$inPage->backButton(false);
-	$inPage->addHeadJS('components/greetings/js/greetings.js');
-
-        $error = '';
-        $captha_code           = $inCore->request('code', 'str', '');
-        $published             = ($inUser->is_admin || $cfg['guest_publish']) ? 1 : 0;
-        $is_submit             = $inCore->inRequest('description');
-        
-        $item['title']         = $inCore->request('title', 'str', '');
-        $item['description']   = $inCore->request('description', 'str', '');
-        $item['file']          = $inCore->request('file', 'str', '');
-
-        if ($is_submit && !$inUser->id && !$inCore->checkCaptchaCode($inCore->request('code', 'str'))) { $error .= $_LANG['ERR_CAPTCHA']; }
-        
-        //изображение пользователя
-        if ($inCore->inRequest('upload') && isset($_FILES["picture"]["name"]) && @$_FILES["picture"]["name"]!='' && $cfg['user_image'] && ($user_id || (!$user_id && $cfg['guest_image']))) {
-
-                $inCore->includeGraphics();
-                $uploaddir = PATH . '/upload/greetings/';
-
-                $realfile = $_FILES['picture']['name'];
-                $path_parts = pathinfo($realfile);
-                $ext = strtolower($path_parts['extension']);
-
-                $realfile = md5($realfile . '-' . time()) . '.' . $ext;
-
-                if ($ext == 'jpg' || $ext == 'jpeg' || $ext == 'gif' || $ext == 'bmp' || $ext == 'png') {
-
-                    $filename = md5($realfile . '-' . $userid . '-' . time()) . '.jpg';
-                    $uploadfile = $uploaddir . $realfile;
-                    $uploadimage = $uploaddir . $filename;
-
-                    $source = $_FILES['picture']['tmp_name'];
-                    $errorCode = $_FILES['picture']['error'];
-                } else {
-                    $error .= $_LANG['ERROR_TYPE_FILE']." jpg, jpeg, gif, bmp, png";
-                }
-            }
-        
-        if($uploadimage){
-            $item['file'] = '/upload/greetings/'.$filename;
-        }
-        
-        if (!$is_submit || $error) {
+        if ( !$inCore->inRequest('submit') ) {
             
+            $inPage->setTitle($_LANG['ADD_GREETINGS']);
+            $inPage->addPathway($_LANG['ADD_GREETINGS']);
+
             if (IS_BILLING && $inUser->id){ cmsBilling::checkBalance('greetings', 'add_greetings'); }
-            
-            if(!$item){
-                $item = cmsUser::sessionGet('greetings');
-                if ($item) { cmsUser::sessionDel('greetings'); }
+            $inPage->setTitle($_LANG['ADD_ADV']);
 
-                $validation = cmsUser::sessionGet('valid_greetings');
-                if ($validation) { cmsUser::sessionDel('valid_greetings'); }
-            }
+            $item = cmsUser::sessionGet('greetings');
+            if ($item) { cmsUser::sessionDel('greetings'); }
             
-            //если значение $item пустое вытаскиваем данные из профиля
-            if(!$item && $user_id!='') {
-               $item['title'] = $inDB->get_field('cms_users', "id='{$user_id}'", 'nickname');
-               $item['file']  = "/upload/greetings/collection/default.jpg";
-            }
-
-            //картинка из коллекции сайта
             if($cfg['img_collection']){
                 $collection_list = $model->CollectionList($cfg['img_width']);
             }
-            
+
             $smarty = $inCore->initSmarty('components', 'com_greetings_add.tpl');
             $smarty->assign('do', $do);
+            $smarty->assign('pagetitle', $_LANG['ADD_GREETINGS']);
             $smarty->assign('user_id', $user_id);
+            $smarty->assign('is_admin', $is_admin);
             $smarty->assign('item', $item);
-            $smarty->assign('validation', $validation);
-            $smarty->assign('error', $error);
             $smarty->assign('collection_list', $collection_list);
             $smarty->assign('cfg', $cfg);
             $smarty->display('com_greetings_add.tpl');
 
-        } else {
+        }
+        
+        if ( $inCore->inRequest('submit') ) {
+
+            $title_fake = cmsCore::request('title_fake', 'str', '');
+            if ($title_fake) { cmsCore::error404(); }
             
-            //проверяем данные
+            //if(!cmsCore::validateForm()) { cmsCore::error404(); }
+
             $errors = false;
-	    $validation = array();
 
-            if(!$item['description']) {$validation['description']=1; $errors = true;}
-            
-            if ($errors) {
+            $item = array();
+            $item['title']         = cmsCore::request('title', 'str');
+            $item['description']   = cmsCore::request('description', 'str');
+            $item['file']          = cmsCore::request('file', 'str');
 
-                //экранируем символы
-                $item['description']   = htmlspecialchars(stripslashes($_REQUEST['description']));
-                $item['title']         = stripslashes($item['title']);
-
-                cmsUser::sessionPut('greetings', $item);
-                cmsUser::sessionPut('valid_greetings', $validation);
-                $inCore->redirect('/greetings/add.html');
-                
+            if ($user_id){
+                $item['published'] = $cfg['moderation'] && !$is_admin ? 0 : 1;
+            } else {
+                $item['published'] = $cfg['guest_publish'] ? 1 : 0;
             }
             
-            if (!$errors) {
+            if (!$inUser->id && !$inCore->checkCaptchaCode(cmsCore::request('code', 'str'))) {
+                cmsCore::addSessionMessage($_LANG['ERR_CAPTCHA'], 'error'); $errors = true;
+            }
+        
+            if (!$item['description']) {
+                cmsCore::addSessionMessage($_LANG['DESC_NOT_EMPTY'], 'error'); $errors = true;
+            }
+
+            if ($errors){
+                $item['description'] = htmlspecialchars(stripslashes($_REQUEST['description']));
+                $item['title']   = stripslashes($item['title']);
+                cmsUser::sessionPut('greetings', $item);
+                $inCore->redirect('/greetings/add.html');
+            }
+            
+            if (isset($_FILES["imgfile"]["name"]) && @$_FILES["imgfile"]["name"]!=''){
                 
-                //дополнительная обработка полей
-                $item['user_id'] = $user_id;
-                $item['ip']      = $inUser->ip;
-                $item['published']     = $published;
-                
+                $inCore->includeGraphics();
+
+                $tmp_name = $_FILES["imgfile"]["tmp_name"];
+                $file = $_FILES["imgfile"]["name"];
+                $path_parts = pathinfo($file);
+                $ext = $path_parts['extension'];
+                if(mb_strstr($ext, 'php')) { die(); }
+                $file = md5($file.time()).'.'.$ext;
+                $item['file'] = '/upload/greetings/' . $file;
+
+                if (@move_uploaded_file($tmp_name, PATH."/upload/greetings/".$file)){
+                    if (isset($cfg['img_width'])) { $img_width = $cfg['img_width']; } else { $img_width = 150; }
+                    @img_resize(PATH."/upload/greetings/$file", PATH."/upload/greetings/".$file, $img_width, $img_width, $cfg['thumbsqr']);
+                    @chmod(PATH."/upload/greetings/".$file, 0644);
+                }
+
+            } else {
                 if($item['file']=='') { $item['file']='/upload/greetings/collection/default.jpg'; }
-                
-                if ($inCore->moveUploadedFile($source, $uploadfile, $errorCode)) {
-                //CREATE THUMBNAIL
-                if (isset($cfg['img_width'])) { $img_width = $cfg['img_width']; } else { $img_width = 150; }
+            }
+            
+            $item['user_id'] = $user_id;
+            $item['ip']      = $inUser->ip;
+            
+            $item_id = $model->addGreeting($item);
+            
+            if (IS_BILLING && $user_id) {
+                cmsBilling::process('greetings', 'add_greetings');
+            }
+            
+            //cmsUser::clearCsrfToken();
+            
+            if ($item['published']) {
+                cmsCore::addSessionMessage($_LANG['ADD_GREETINGS_SUCCESS'], 'success');
+                $inCore->redirect('/greetings/read'.$item_id.'.html');
+            }
 
-                //resize image
-                @img_resize($uploadfile, $uploadimage, $img_width, $img_width, $cfg['thumbsqr']);
+            if (!$item['published']) {
 
-                //DELETE ORIGINAL							
-                @unlink($uploadfile);
-                }
-
-                //добавляем поздравление
-                $greeting_id = $model->addGreeting($item);
-                
-                if (IS_BILLING && $inUser->id){ cmsBilling::process('greetings', 'add_greetings'); }
-                
-                if($cfg['guest_publish']){
-                    $msg = $_LANG['ADD_GREETINGS_SUCCESS'];
+                $link = '<a href="/greetings/read'.$item_id.'.html">'.$item['title'].'</a>';
+                if($inUser->id){
+                    $user = '<a href="'.cmsUser::getProfileURL($inUser->login).'">'.$inUser->nickname.'</a>';
                 } else {
-                    $msg = $_LANG['ADD_GREETINGS_NOPUB'];
+                    $user = $_LANG['GUEST'].', ip: '.$inUser->ip;
                 }
-                cmsCore::addSessionMessage($msg, 'success');
+                $message = str_replace('%user%', $user, $_LANG['MSG_GR_SUBMIT']);
+                $message = str_replace('%link%', $link, $message);
+                cmsUser::sendMessage(USER_UPDATER, 1, $message);
+
+                cmsCore::addSessionMessage($_LANG['GR_IS_ADDED'].'<br>'.$_LANG['GR_PREMODER_TEXT'], 'success');
                 $inCore->redirect('/greetings');
             }
+
         }
     }
     
@@ -273,148 +214,129 @@ function greetings() {
 /* ========================== РЕДАКТИРУЕМ ПОЗДРАВЛЕНИЕ ================================================ */
 /* ==================================================================================================== */
     
-if ($do == 'edit') {
+    if ($do == 'edit') {
 
-        //если не авторизован, перебрасываем на ссылку для авторизации
-        if (!$inUser->id) {
-            cmsUser::goToLogin();
+        if (!$inUser->id) { cmsUser::goToLogin(); }
+        
+        $id   = cmsCore::request('id', 'int', 0);
+        $greetings = $model->getGreeting($id);
+
+        if (!$greetings) { cmsCore::error404(); }
+        
+        $is_admin  = $inUser->is_admin;
+	$is_author = ($inUser->id == $greetings['user_id']);
+        
+        if (!$is_admin && !$is_author) {
+            cmsCore::addSessionMessage($_LANG['YOU_HAVENT_ACCESS'], 'error');
+            $inCore->redirect('/greetings');
         }
+        
+        if ( !$inCore->inRequest('submit') ) {
+            
+            $inPage->setTitle($_LANG['EDIT_GREETINGS']);
+            $inPage->addPathway($_LANG['EDIT_GREETINGS']);
 
-        $greeting = $model->getGreeting($id);
+            $item = cmsUser::sessionGet('greetings');
+            if ($item) { cmsUser::sessionDel('greetings'); }
+            
+            $item = $item ? $item : $greetings;
+            
+            if($cfg['img_collection']){
+                $collection_list = $model->CollectionList($cfg['img_width']);
+            }
 
-        if (!$greeting['id']) {
-            cmsCore::error404();
+            $smarty = $inCore->initSmarty('components', 'com_greetings_add.tpl');
+            $smarty->assign('do', $do);
+            $smarty->assign('pagetitle', $_LANG['EDIT_GREETINGS']);
+            $smarty->assign('user_id', $user_id);
+            $smarty->assign('is_admin', $is_admin);
+            $smarty->assign('item', $item);
+            $smarty->assign('collection_list', $collection_list);
+            $smarty->assign('cfg', $cfg);
+            $smarty->display('com_greetings_add.tpl');
+
         }
+        
+        if ( $inCore->inRequest('submit') ) {
 
-        //если хозяин или админ то разрешаем редактирование
-        if ($is_admin || $inUser->id == $greeting['user_id']) {
-
-            $error = '';
-            $is_submit = $inCore->inRequest('description');
+            $title_fake = cmsCore::request('title_fake', 'str', '');
+            if ($title_fake) { cmsCore::error404(); }
             
-            $item['title']         = $inCore->request('title', 'str', '');
-            $item['description']   = $inCore->request('description', 'str', '');
-            $item['file']          = $inCore->request('file', 'str', '');
-            
-            //изображение пользователя
-            if ($inCore->inRequest('upload') && isset($_FILES["picture"]["name"]) && @$_FILES["picture"]["name"]!='') {
+            //if(!cmsCore::validateForm()) { cmsCore::error404(); }
 
-                    $inCore->includeGraphics();
-                    $uploaddir = PATH . '/upload/greetings/';
+            $errors = false;
 
-                    $realfile = $_FILES['picture']['name'];
-                    $path_parts = pathinfo($realfile);
-                    $ext = strtolower($path_parts['extension']);
+            $item = array();
+            $item['title']         = cmsCore::request('title', 'str');
+            $item['description']   = cmsCore::request('description', 'str');
+            $item['file']          = cmsCore::request('file', 'str');
 
-                    $realfile = md5($realfile . '-' . time()) . '.' . $ext;
+            if (!$item['description']) {
+                cmsCore::addSessionMessage($_LANG['DESC_NOT_EMPTY'], 'error'); $errors = true;
+            }
 
-                    if ($ext == 'jpg' || $ext == 'jpeg' || $ext == 'gif' || $ext == 'bmp' || $ext == 'png') {
-
-                        $filename = md5($realfile . '-' . $userid . '-' . time()) . '.jpg';
-                        $uploadfile = $uploaddir . $realfile;
-                        $uploadimage = $uploaddir . $filename;
-
-                        $source = $_FILES['picture']['tmp_name'];
-                        $errorCode = $_FILES['picture']['error'];
-                    } else {
-                        $error .= $_LANG['ERROR_TYPE_FILE']." jpg, jpeg, gif, bmp, png";
-                    }
-                }
-
-            if($uploadimage){
-                $item['file'] = '/upload/greetings/'.$filename;
+            if ($errors){
+                $item['description'] = htmlspecialchars(stripslashes($_REQUEST['description']));
+                $item['title']   = stripslashes($item['title']);
+                cmsUser::sessionPut('greetings', $item);
+                $inCore->redirect('/greetings/edit'.$item['id'].'.html');
             }
             
-            if (!$is_submit || $error) {
+            if (isset($_FILES["imgfile"]["name"]) && @$_FILES["imgfile"]["name"]!=''){
                 
-                $inPage->setTitle($_LANG['EDIT_GREETINGS']);
-                $inPage->addPathway($_LANG['EDIT_GREETINGS']);
+                $inCore->includeGraphics();
 
-                $inPage->backButton(false);
-                $inPage->addHeadJS('components/greetings/js/greetings.js');
-            
-                if (!$item) {
-                 
-                    $item = cmsUser::sessionGet('greetings');
-                    if ($item) { cmsUser::sessionDel('greetings'); }
+                $tmp_name = $_FILES["imgfile"]["tmp_name"];
+                $file = $_FILES["imgfile"]["name"];
+                $path_parts = pathinfo($file);
+                $ext = $path_parts['extension'];
+                if(mb_strstr($ext, 'php')) { die(); }
+                $file = md5($file.time()).'.'.$ext;
+                $item['file'] = '/upload/greetings/' . $file;
 
-                    $validation = cmsUser::sessionGet('valid_greetings');
-                    if ($validation) { cmsUser::sessionDel('valid_greetings'); }
-                }
-
-                //если значение $item пустое получаем данные
-                if ($item!='') { $item = $greeting; }
-
-                //картинка из коллекции сайта
-                if ($cfg['img_collection']) {
-                    $collection_list = $model->CollectionList($cfg['img_width']);
-                }
-
-                $smarty = $inCore->initSmarty('components', 'com_greetings_add.tpl');
-                $smarty->assign('do', $do);
-                $smarty->assign('user_id', $user_id);
-                $smarty->assign('item', $item);
-                $smarty->assign('validation', $validation);
-                $smarty->assign('error', $error);
-                $smarty->assign('collection_list', $collection_list);
-                $smarty->assign('cfg', $cfg);
-                $smarty->display('com_greetings_add.tpl');
-                
-            } else {
-                
-                //проверяем данные
-                $errors = false;
-                $validation = array();
-
-                if(!$item['description']) {$validation['description']=1; $errors = true;}
-
-                if ($errors) {
-
-                    //экранируем символы
-                    $item['description']   = htmlspecialchars(stripslashes($_REQUEST['description']));
-                    $item['title']         = stripslashes($item['title']);
-
-                    cmsUser::sessionPut('greetings', $item);
-                    cmsUser::sessionPut('valid_greetings', $validation);
-                    $inCore->redirect('/greetings/edit'.$id.'.html');
-
-                }
-                
-                if (!$errors) {
-                    
-                    if($item['file']=='') { $item['file']='/upload/greetings/collection/default.jpg'; }
-                    
-                    if ($inCore->moveUploadedFile($source, $uploadfile, $errorCode)) {
-                    //CREATE THUMBNAIL
+                if (@move_uploaded_file($tmp_name, PATH."/upload/greetings/".$file)){
                     if (isset($cfg['img_width'])) { $img_width = $cfg['img_width']; } else { $img_width = 150; }
+                    @img_resize(PATH."/upload/greetings/$file", PATH."/upload/greetings/".$file, $img_width, $img_width, $cfg['thumbsqr']);
+                    @chmod(PATH."/upload/greetings/".$file, 0644);
+                }
 
-                    //resize image
-                    @img_resize($uploadfile, $uploadimage, $img_width, $img_width, $cfg['thumbsqr']);
-
-                    //DELETE ORIGINAL							
-                    @unlink($uploadfile);
-                    
-                    }
-                    
-                    if($item['file']!=$greeting['file']){
-                        //удаляем старое изображение, если оно было загружено пользователем
-                        if (preg_match('/^(\/upload\/greetings\/)?([\da-z]+)\.(jpg)$/', $greeting['file'])) {
-                                @unlink(PATH.$greeting['file']);
-                        }
-                    }
-
-                    //обновляем поздравление
-                    $greeting_id = $model->updateGreeting($item, $id);
-
-                    cmsCore::addSessionMessage($_LANG['EDIT_GREETINGS_SUCCESS'], 'success');
-                    $inCore->redirect('/greetings');
+            } else {
+                if($item['file']=='') { $item['file']='/upload/greetings/collection/default.jpg'; }
+            }
+            
+            if (!$is_admin && $cfg['moderation']){
+                $item['published'] = 0;
+            } else {
+                $item['published'] = $greetings['published'];
+            }
+            
+            $model->updateGreeting($item, $id);
+            cmsUser::sessionClearAll();
+            //cmsUser::clearCsrfToken();
+            
+            if ($item['file'] != $greetings['file']) {
+                if (preg_match('/^(\/upload\/greetings\/)?([\da-z]+)\.(jpg|jpeg|bmp|png|gif)$/', $greetings['file'])) {
+                    @unlink(PATH . $greetings['file']);
                 }
             }
+            
+            if (!$item['published'] && !$is_admin) {
 
-        } else {
-            AccessDenied();
-            return;
+                $link = '<a href="/greetings/read'.$id.'.html">'.$item['title'].'</a>';
+                $user = '<a href="'.cmsUser::getProfileURL($inUser->login).'">'.$inUser->nickname.'</a>';
+
+                $message = str_replace('%user%', $user, $_LANG['MSG_GR_EDITED']);
+                $message = str_replace('%link%', $link, $message);
+                cmsUser::sendMessage(USER_UPDATER, 1, $message);
+
+                cmsCore::addSessionMessage($_LANG['GR_EDIT_PREMODER_TEXT'], 'info');
+            }
+            
+            cmsCore::addSessionMessage($_LANG['EDIT_GREETINGS_SUCCESS'], 'success');
+            $inCore->redirect('/greetings/read'.$id.'.html');
+
         }
+   
     }
 
 /* ==================================================================================================== */
@@ -423,46 +345,98 @@ if ($do == 'edit') {
     
     if ($do == 'delete') {
 
-        //если не авторизован, перебрасываем на ссылку для авторизации
-        if (!$inUser->id){ cmsUser::goToLogin(); }
-
-        $greeting = $inDB->get_fields('cms_greetings', "id='$id'", "user_id, file, id");
-
-        if(!$greeting['id']) { cmsCore::error404(); }
-
-        //проверяем имеет ли пользователь право удалить
-        if ($is_admin || $inUser->id == $greeting['user_id']) {
+	if(!cmsCore::validateForm()) { cmsCore::halt(); }
+	if($_SERVER['HTTP_X_REQUESTED_WITH'] != 'XMLHttpRequest') { cmsCore::halt(); }
+        
+        if (!$inUser->id) { cmsCore::halt(); }
+        
+        $id        = cmsCore::request('id', 'int', 0);
+        $item = $inDB->get_fields('cms_greetings', "id='$id'", "*");
+        
+        if (!$item){ cmsCore::halt(); }
+        
+        $is_admin  = $inUser->is_admin;
+	$is_author = ($inUser->id == $item['user_id']);
+        
+        if (!$is_admin && !$is_author) { cmsCore::halt(); }
             
-            $model->deleteGreeting($id);
+        $model->deleteGreeting($id);
+        
+        if ($inUser->id != $item['user_id'] && $item['user_id']>0){
+            cmsUser::sendMessage(USER_UPDATER, $item['user_id'], $_LANG['YOUR_GREETING'].' <b>&laquo;'.mb_substr($item['description'], 0, 15).'...&raquo;</b> '.$_LANG['WAS_DELETED']);
+	}
 
-            cmsCore::addSessionMessage($_LANG['GREETING_DELETE'], 'success');
-            $inCore->redirect('/greetings');
-            
-        } else {
-            AccessDenied();
-            return;
-        }
+        cmsCore::addSessionMessage($_LANG['GREETING_DELETE'], 'success');
+        cmsUser::clearCsrfToken();
+        cmsCore::jsonOutput(array('error' => false, 'redirect'  => '/greetings'));
     }
+    
+/* ==================================================================================================== */
+/* ========================== ПУБЛИКАЦИЯ ПОЗДРАВЛЕНИЯ ================================================= */
+/* ==================================================================================================== */
+   
+    if ($do == 'publish'){
+        
+        $id        = cmsCore::request('id', 'int', 0);
+	$item     = $model->getGreeting($id);
+        if (!$item){ cmsCore::error404(); }
+
+	// если уже опубликовано, 404
+	if ($item['published']) { cmsCore::error404(); }
+
+	// публиковать могут админы и модераторы доски
+	if(!$inUser->is_admin) { cmsCore::error404(); }
+
+	// публикуем
+        $inDB->setFlag('cms_greetings', $id, 'published', 1);
+
+ 	if($item['user_id']){
+            $link = '<a href="/greetings/read'.$item['id'].'.html">'.$item['title'].'</a>';
+            $message = str_replace('%link%', $link, $_LANG['MSG_ADV_ACCEPTED']);
+            cmsUser::sendMessage(USER_UPDATER, $item['user_id'], $message);
+	}
+
+	cmsCore::addSessionMessage($_LANG['GR_IS_ACCEPTED'], 'success');
+        $inCore->redirect('/greetings/read'.$item['id'].'.html');
+
+    }
+    
+/* ==================================================================================================== */
+/* ========================== ПРОСМОТР ПОЗДРАВЛЕНИЯ =================================================== */
+/* ==================================================================================================== */
+    if($do=='read'){
+
+	$id        = cmsCore::request('id', 'int', 0);
+	$item      = $model->getGreeting($id);
+	if (!$item){ cmsCore::error404(); }
+
+	if (!$item['published'] && !$is_admin && !$item['user_id']!=$user_id) { cmsCore::error404(); }
+
+	// для неопубликованного показываем инфо: на модерации
+	if (!$item['published']) {
+            cmsCore::addSessionMessage($_LANG['GR_IS_MODER'], 'info');
+	}
+
+	$item['description'] = nl2br($item['description']);
+
+	$inPage->addPathway($item['title']);
+	$inPage->setTitle($item['title']);
+	$inPage->setDescription($item['title']);
+        
+        $is_admin  = $inUser->is_admin;
+	$is_author = ($user_id == $item['user_id']);
+        
+        if ($is_admin || $is_author) { $item['moderator'] = 1;}
+
+	$smarty = $inCore->initSmarty('components', 'com_greetings_item.tpl');
+	$smarty->assign('item', $item);
+	$smarty->assign('cfg', $cfg);
+	$smarty->assign('user_id', $user_id);
+	$smarty->assign('is_admin', $is_admin);
+	$smarty->display('com_greetings_item.tpl');
+
+    }
+    
 }
 
-function existImage($imageurl) {
-    if (!$imageurl) {
-        return '/upload/greetings/collection/default.jpg';
-    }
-    if ($imageurl && @file_exists(PATH . '' . $imageurl)) {
-        return $imageurl;
-    } else {
-        return '/upload/greetings/collection/default.jpg';
-    }
-}
-
-function AccessDenied() {
-    global $_LANG;
-    $inCore = cmsCore::getInstance();
-    $smarty = $inCore->initSmarty('components', 'com_error.tpl');
-    $smarty->assign('err_title', $_LANG['ACCESS_DENIED']);
-    $smarty->assign('err_content', 'Недостаточно прав');
-    $smarty->display('com_error.tpl');
-    return;
-}
 ?>

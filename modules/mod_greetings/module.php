@@ -1,7 +1,8 @@
 <?php
-/*==================================================*/
-/*            created by soft-solution.ru           */
-/*==================================================*/
+/* ****************************************************************************************** */
+/* created by soft-solution.ru                                                                */
+/* module.php of component greetings for InstantCMS 1.10.2                                    */
+/* ****************************************************************************************** */
 
 function mod_greetings($module_id){
 
@@ -68,7 +69,6 @@ function mod_greetings($module_id){
             $smarty->assign('pagebar_module', cmsPage::getPagebar($total_page, $page, $perpage, 'javascript:greetingPage(%page%, '.$module_id.')'));
 	}
 	
-        //$smarty->assign('is_ajax', false);
 	$smarty->assign('is_greetings', $is_greetings);
 	$smarty->assign('module_id', $module_id);
 	$smarty->assign('cfg', $cfg);

@@ -1,40 +1,36 @@
 <?php
-/*==================================================*/
-/*            created by soft-solution.ru           */
-/*==================================================*/
+/* ****************************************************************************************** */
+/* created by soft-solution.ru                                                                */
+/* latest.php of component greetings for InstantCMS 1.10.2                                    */
+/* ****************************************************************************************** */
 
-	define('PATH', $_SERVER['DOCUMENT_ROOT']);
-	include(PATH.'/core/ajax/ajax_core.php');
+    define('PATH', $_SERVER['DOCUMENT_ROOT']);
+    include(PATH.'/core/ajax/ajax_core.php');
 
     if (!isset($_REQUEST['module_id'])) { die(2); }
     if (!isset($_REQUEST['page'])) { die(4); }
-
-    // Грузим шаблонизатор
-    $smarty = $inCore->initSmarty();
-
-    // Входные данные
-    $page		= $inCore->request('page', 'int', 1);	
+    
+    $page	= $inCore->request('page', 'int', 1);	
     $module_id	= $inCore->request('module_id', 'int', '');
-
-    // Грузим конфиг модуля
+    
     $cfg = $inCore->loadModuleConfig($module_id);
-
+    
     if (!isset($cfg['greetingscount'])) { $cfg['greetingscount']= 5; }
     if (!isset($cfg['showimages'])) { $cfg['showimages']= 1; }
     if (!isset($cfg['imagewidth'])) { $cfg['imagewidth']= 90; }
-    if (!isset($cfg['addgreetings'])) { $cfg['addgreetings']= 1; }
+    if (!isset($cfg['showadd'])) { $cfg['showadd']= 1; }
     if (!isset($cfg['showlink'])) { $cfg['showlink']= 0; }
     if (!isset($cfg['maxlen'])) { $cfg['maxlen']= 100; }
     if (!isset($cfg['is_pag'])) { $cfg['is_pag']= 0; }
-    
+
     $is_greetings = false;
 
     $perpage = $cfg['greetingscount'];
 
-	$sql = "SELECT g.*, u.nickname as author, u.login 
-		FROM cms_greetings g 
-		LEFT JOIN cms_users u ON u.id = g.user_id 
-                WHERE g.published = 1 ORDER BY g.pubdate DESC LIMIT ".(($page-1)*$perpage).", $perpage";
+    $sql = "SELECT g.*, u.nickname as author, u.login 
+            FROM cms_greetings g 
+            LEFT JOIN cms_users u ON u.id = g.user_id 
+            WHERE g.published = 1 ORDER BY g.pubdate DESC LIMIT ".(($page-1)*$perpage).", $perpage";
 
     $result = $inDB->query($sql);
         
@@ -64,6 +60,7 @@
     
     // Отдаем в шаблон
     ob_start();
+    $smarty = $inCore->initSmarty();
     $smarty = $inCore->initSmarty('modules', 'mod_greetings.tpl');			
     $smarty->assign('greetings', $greetings);
     $smarty->assign('is_ajax', true);

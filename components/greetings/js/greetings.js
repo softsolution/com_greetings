@@ -1,16 +1,29 @@
-$(document).ready(function(){
-$('td:has(p.novalid)').children('input').addClass('novalidfield');
-$('td:has(p.novalid)').children('textarea').addClass('novalidfield');
-$("#description").focusin(function(){
-    $(this).removeClass('novalidfield');
-    $('#descriptioncheck').html('');
+$(function(){
+  greetings = {
+    deleteItem: function(item_id, csrf_token) {
+        core.confirm('Вы действительно хотите удалить это поздравление?', null, function(){
+            $.post('/greetings/delete'+item_id+'.html', {csrf_token: csrf_token}, function(result){
+                if(result.error == false){
+                    window.location.href = result.redirect;
+                }
+            }, 'json');
+        });
+    },
+    showCollection: function() {
+        $('#collection_block').slideUp('fast');
+        $('#collection_block').slideDown('fast');
+        $('#collection_link').hide();
+    },
+    hideCollection: function() {
+        $('#collection_block').slideDown('fast');
+        $('#collection_block').slideUp('fast');
+        $('#collection_link').show();
+    },
+    selectDefault: function() {
+        $('#file').val('/upload/greetings/collection/default.jpg');
+        $('#choose_img').attr('src', '/upload/greetings/collection/default.jpg');
+        greetings.hideCollection();
+        $('#select_image').show();
+    },    
+  }
 });
-})
-
-function sendGreetings(){
-if($('#description').attr('value').length < 10){
-alert('Ваше поздравление слишком короткое!');	
-} else {
-document.greetingsform.submit();	
-}	
-}
